@@ -32,7 +32,7 @@ class Autotrader_scraper:
         except:
             print(f"Error accepting cookies")
     
-    def search_vehicle_type(self, postcode="BA229SZ", make, model=""):
+    def search_vehicle_type(self, postcode="BA229SZ", make_type="", model_type=""):
 
         pass
 
