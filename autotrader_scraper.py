@@ -7,7 +7,6 @@ from selenium.webdriver.common.keys import Keys
 
 import time
 from random import uniform
-from tabulate import tabulate
 
 class Autotrader_scraper:
     def __init__(self):
@@ -110,8 +109,4 @@ if __name__ == "__main__":
     test.accept_cookies()
     test.search_vehicle_type("Lotus", "Exige")
     results = test.get_url_list()
-
-    results.sort(key=lambda x:x[3])
-    print(tabulate(results, headers=['url', 'title', 'subtitle', 'price', 'location'], maxcolwidths=[50, 20, 20, None]))
-
     test.close()
