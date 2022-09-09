@@ -15,6 +15,8 @@ class Autotrader_scraper:
         self.delay = 10
 
         self.driver = webdriver.Safari()
+        self.driver.implicitly_wait(0.5)
+        self.driver.maximize_window()
         self.driver.get(self.url)
         print(f"Navigated to {self.url}")
 
@@ -52,19 +54,23 @@ class Autotrader_scraper:
 
         
         search_button = self.driver.find_element(by=By.XPATH, value="//button[@data-gui='search-cars-button']")
+        print(f"Clicking button \"{search_button.text}\"")
         search_button.click()
+        self.__sleep(1)
         search_button.click()
-        self.__sleep(2)
+        self.__sleep(1)
 
         print(f"Searching for {make_type} {model_type}")
 
-    def get_url_list(self, pages=0):
+    def get_url_list(self, max_pages=0):
         results_list = []
         search_url = self.driver.current_url[:-1]
 
-        if pages == 0:
+        if max_pages == 0:
             pages_text = self.driver.find_element(by=By.XPATH, value="//li[@class='paginationMini__count']").text
             pages = int(pages_text.split()[-1])
+        else:
+            pages = max_pages
 
         for page in range(1, pages + 1):
             print(f"Searching page {page} of {pages}")
@@ -80,10 +86,11 @@ class Autotrader_scraper:
                     continue
                 else:
                     vehicle_href = vehicle.find_element(by=By.XPATH, value="article/a").get_attribute('href')
-                    vehicle_title = vehicle.find_element(by=By.CLASS_NAME, value="product-card-details__title").text
-                    vehicle_subtitle = vehicle.find_element(by=By.CLASS_NAME, value="product-card-details__subtitle").text
+                    vehicle_title = vehicle.find_element(by=By.CLASS_NAME, value="product-card-details__title").text.strip()
+                    vehicle_subtitle = vehicle.find_element(by=By.CLASS_NAME, value="product-card-details__subtitle").text.strip()
                     vehicle_price = vehicle.find_element(by=By.CLASS_NAME, value="product-card-pricing__price").text.strip()
-                    results_list.append([vehicle_href, vehicle_title, vehicle_subtitle, vehicle_price])
+                    vehicle_location = vehicle.find_elements(by=By.XPATH, value=".//span[@class='product-card-seller-info__spec-item-copy']")[-1].text
+                    results_list.append([vehicle_href, vehicle_title, vehicle_subtitle, vehicle_price, vehicle_location])
 
             print(f"{len(vehicles)} vehicles found on page {page}.")
 
@@ -102,13 +109,9 @@ if __name__ == "__main__":
     test = Autotrader_scraper()
     test.accept_cookies()
     test.search_vehicle_type("Lotus", "Exige")
-    results = test.get_url_list(0)
+    results = test.get_url_list()
 
     results.sort(key=lambda x:x[3])
+    print(tabulate(results, headers=['url', 'title', 'subtitle', 'price', 'location'], maxcolwidths=[50, 20, 20, None]))
 
-    print(tabulate(results, headers=['url', 'title', 'subtitle', 'price'], maxcolwidths=[20, 20, 20, None]))
-    
-    print(f"number of results {len(results)}")
-
-    time.sleep(5)
     test.close()
