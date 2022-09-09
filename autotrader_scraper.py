@@ -76,8 +76,6 @@ class Autotrader_scraper:
 
             for vehicle in vehicles:
                 vehicle_standout = vehicle.find_elements(by=By.XPATH, value="span")
-                
-                print(vehicle_standout[0].text) if vehicle_standout else print("not ad")
                 if vehicle_standout and vehicle_standout[0].text == 'Ad':
                     continue
                 else:
