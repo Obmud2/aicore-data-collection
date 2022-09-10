@@ -21,7 +21,6 @@ def test_search_vehicle_type():
         test_scraper.close_session()
         is_pass = init_url != new_url and test_make in new_url and test_model in new_url
         print_test_result(is_pass, "test_search_vehicle_type()")
-
 def test_get_vehicle_list():
     """
     Check that number of listed vehicles matches number of results scraped.
@@ -38,7 +37,35 @@ def test_get_vehicle_list():
         test_scraper.close_session()
         is_pass = len(vehicle_data_list) == scrape_num_results(test_search_results_url)
         print_test_result(is_pass, "test_get_vehicle_list()")
+    return vehicle_data_list
+
+def test_add_vehicle_page_data(vehicle_data_list = None):
+    """
+    Check for all data added to Vehicle_data for sample of pages.
+    """
+    test_search_results_url = "https://www.autotrader.co.uk/car-search?postcode=ba229sz&make=Lotus&model=Exige&include-delivery-option=on&advertising-location=at_cars&page=1"
+    with Timer():
+        if vehicle_data_list == None:
+            test_scraper = Autotrader_scraper(test_search_results_url)
+            vehicle_data_list = test_scraper.get_vehicle_list(max_pages=1)
+        else:
+            test_scraper = Autotrader_scraper(vehicle_data_list[0].get_url())
+        
+        num_tests = min([3,len(vehicle_data_list)])
+        vehicle_data_list_sample = test_scraper.add_vehicle_page_data(vehicle_data_list[:num_tests])
+        test_scraper.close_session()
+        is_pass = True
+        for vehicle in vehicle_data_list_sample:
+            vehicle_data = vehicle.get_data()
+            if vehicle_data["id"] == None or vehicle_data["uuid"] == None:
+                is_pass = False
+            for data in vehicle_data["data"].values():
+                if data == None:
+                    is_pass = False
+        print_test_result(is_pass, "test_add_vehicle_page_data()")
+    return vehicle_data_list
 
 if __name__ == "__main__":
     test_search_vehicle_type()
-    test_get_vehicle_list()
+    vehicle_data_list = test_get_vehicle_list()
+    vehicle_data_list = test_add_vehicle_page_data(vehicle_data_list)
