@@ -1,6 +1,8 @@
 from scraper.autotrader_scraper import Autotrader_scraper
 from scraper.timer import Timer
 from bs4 import BeautifulSoup
+from shutil import rmtree
+import os
 import urllib.request
 import re
 
@@ -38,7 +40,6 @@ def test_get_vehicle_list():
         is_pass = len(vehicle_data_list) == scrape_num_results(test_search_results_url)
         print_test_result(is_pass, "test_get_vehicle_list()")
     return vehicle_data_list
-
 def test_add_vehicle_page_data(vehicle_data_list = None):
     """
     Check for all data added to Vehicle_data for sample of pages.
@@ -63,9 +64,40 @@ def test_add_vehicle_page_data(vehicle_data_list = None):
                 if data == None:
                     is_pass = False
         print_test_result(is_pass, "test_add_vehicle_page_data()")
-    return vehicle_data_list
+    return vehicle_data_list_sample
+def test_save_data(vehicle_data_list = None):
+    with Timer():
+        if vehicle_data_list == None:
+            test_search_results_url = "https://www.autotrader.co.uk/car-search?postcode=ba229sz&make=Lotus&model=Exige&include-delivery-option=on&advertising-location=at_cars&page=1"
+            test_scraper = Autotrader_scraper(test_search_results_url)
+            vehicle_data_list = test_scraper.get_vehicle_list(max_pages=1)
+            vehicle_data_list = test_scraper.add_vehicle_page_data(vehicle_data_list)
+
+        test_dir_path = "test/raw_data"
+        is_pass = True
+        rmtree(test_dir_path, ignore_errors=True)
+        vehicle_data_ids = []
+        for vehicle_data in vehicle_data_list:
+            vehicle_data.save_data(path=test_dir_path)
+            vehicle_data_ids.append(vehicle_data.get_id())
+
+        # Check all folders are created
+        if os.listdir(test_dir_path).sort() != vehicle_data_ids.sort():
+            is_pass = False
+
+        # Check of folder contents
+        for vehicle_data in vehicle_data_list:
+            vehicle_dir = os.listdir(f"{test_dir_path}/{vehicle_data.get_id()}")
+            if vehicle_dir.sort() != ["data.json", "images"].sort():
+                is_pass = False
+            img_dir = os.listdir(f"{test_dir_path}/{vehicle_data.get_id()}/images")
+            if len(img_dir) != len(vehicle_data.get_data()['data']['img']):
+                is_pass = False
+
+        print_test_result(is_pass, "test_save_data()")
 
 if __name__ == "__main__":
     test_search_vehicle_type()
     vehicle_data_list = test_get_vehicle_list()
     vehicle_data_list = test_add_vehicle_page_data(vehicle_data_list)
+    test_save_data(vehicle_data_list)
