@@ -1,3 +1,4 @@
+from tabnanny import verbose
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
@@ -14,14 +15,15 @@ class Autotrader_scraper:
     """
     Container class for the autotrader scraper tool.
     """
-    def __init__(self):
-        self.url = "https://www.autotrader.co.uk"
+    def __init__(self, url="https://www.autotrader.co.uk", verbose=False):
+        self.url = url
+        self.verbose = verbose
         self.delay = 10
         self.driver = webdriver.Safari()
         self.driver.implicitly_wait(0.5)
         self.driver.maximize_window()
         self.driver.get(self.url)
-        print(f"Navigated to {self.url}")
+        if self.verbose: print(f"Navigated to {self.url}")
         self.__accept_cookies()
 
     def __sleep(self, duration = 1, distribution=0.2):
@@ -42,7 +44,7 @@ class Autotrader_scraper:
             accept_cookies_button = self.driver.find_element(by=By.XPATH, value="//button[@title='Accept All']")
             accept_cookies_button.click()
             self.driver.switch_to.default_content()
-            print("Cookies accepted")
+            if self.verbose: print("Cookies accepted")
             self.__sleep(1)
         except:
             print(f"Error accepting cookies")  
@@ -156,7 +158,7 @@ class Autotrader_scraper:
         __select_make(make_type)
         __select_model(model_type)
         __click_search()
-        print(f"Searching for {make_type} {model_type}")
+        if self.verbose: print(f"Searching for {make_type} {model_type}")
     def get_vehicle_list(self, max_pages=0):
         """
         Navigates through all search pages to create vehicle list of top level data, up to a max_page limit.
@@ -176,7 +178,7 @@ class Autotrader_scraper:
             pages = max_pages
 
         for page in range(1, pages + 1):
-            print(f"Searching page {page} of {pages}")
+            if self.verbose: print(f"Searching page {page} of {pages}")
             if page != 1:
                 self.driver.get(f"{search_url}{page}")
             self.__sleep(1)
