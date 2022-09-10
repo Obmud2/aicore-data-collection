@@ -58,35 +58,29 @@ class Autotrader_scraper:
         """
         vehicle_list = []
         vehicles = self.driver.find_elements(by=By.XPATH, value="//li[@class='search-page__result']")
-        element_id = 0
-        with Timer(text="Search page data scrape: " + "Elapsed time: {:0.4f} seconds"):
-            for vehicle in vehicles:
-                if vehicle.get_attribute('data-is-promoted-listing')=="true":
-                    print("Ad found")
-                    continue
-                else:
-                    with Timer(text=f"Get veh data {element_id}: " + "Elapsed time: {:0.4f} seconds"):
-                        vehicle_href = vehicle.find_element(by=By.XPATH, value="article/a").get_attribute('href')
-                        vehicle_id = re.findall('[0-9]{15}', vehicle_href)[0]
-                        vehicle_title = vehicle.find_element(by=By.CLASS_NAME, value="product-card-details__title").text.strip()
-                        vehicle_subtitle = vehicle.find_element(by=By.CLASS_NAME, value="product-card-details__subtitle").text.strip()
-                        vehicle_price = vehicle.find_element(by=By.CLASS_NAME, value="product-card-pricing__price").text.strip()
-                        vehicle_price = int(re.sub('[^0-9]', '', vehicle_price))
-                        vehicle_location = vehicle.find_elements(by=By.XPATH, value=".//span[@class='product-card-seller-info__spec-item-copy']")[-1].text
+        for vehicle in vehicles:
+            if vehicle.get_attribute('data-is-promoted-listing')=="true":
+                continue
+            else:
+                vehicle_href = vehicle.find_element(by=By.XPATH, value="article/a").get_attribute('href')
+                vehicle_id = re.findall('[0-9]{15}', vehicle_href)[0]
+                vehicle_title = vehicle.find_element(by=By.CLASS_NAME, value="product-card-details__title").text.strip()
+                vehicle_subtitle = vehicle.find_element(by=By.CLASS_NAME, value="product-card-details__subtitle").text.strip()
+                vehicle_price = vehicle.find_element(by=By.CLASS_NAME, value="product-card-pricing__price").text.strip()
+                vehicle_price = int(re.sub('[^0-9]', '', vehicle_price))
+                vehicle_location = vehicle.find_elements(by=By.XPATH, value=".//span[@class='product-card-seller-info__spec-item-copy']")[-1].text
 
-                    with Timer(text=f"Write dict {element_id}: " + "Elapsed time: {:0.4f} seconds"):
-                        vehicle_list.append({
-                            "id"   : vehicle_id,
-                            "uuid" : str(uuid4()),
-                            "data" : {
-                                "href"     : vehicle_href,
-                                "title"    : vehicle_title, 
-                                "subtitle" : vehicle_subtitle,
-                                "price"    : vehicle_price,
-                                "location" : vehicle_location
-                                }
-                            })
-                    element_id += 1
+                vehicle_list.append({
+                    "id"   : vehicle_id,
+                    "uuid" : str(uuid4()),
+                    "data" : {
+                        "href"     : vehicle_href,
+                        "title"    : vehicle_title, 
+                        "subtitle" : vehicle_subtitle,
+                        "price"    : vehicle_price,
+                        "location" : vehicle_location
+                        }
+                    })
         return vehicle_list
     def __parse_vehicle_page(self, vehicle_url):
         """
