@@ -11,3 +11,14 @@ Selenium is used as the main technology using a safari web driver to enable flex
 Technologies used:
 - Conda
 - Selenium
+
+## Milestone 2: Adding further data from individual pages and storing data locally
+Scrapes the list of URLs and individual page data to create dictionaries for each vehicle entry. Data and images are saved locally, as json and jpg formats respectively. Each vehicle entry is recorded with a unique id from autotrader, and a unique UUID.
+
+Code structure is improved with increased encapsulation of internal page scraping methods, and greater abstraction to support readibility.
+
+Technologies used:
+- UUID
+- JSON
+- urllib
+- pandas (for easy visualisation of data whilst testing code)
