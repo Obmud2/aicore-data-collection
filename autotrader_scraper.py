@@ -91,8 +91,16 @@ class Autotrader_scraper:
             "img" : vehicle_img_list
         }
 
-        return vehicle_data
-    
+        return vehicle_data    
+    def __download_images(self, vehicle):
+        if not os.path.exists(f"raw_data/{vehicle['id']}/images"):
+            os.mkdir(f"raw_data/{vehicle['id']}/images")
+        img_index = 0
+        for img_url in vehicle['data']['img']:
+            img_path = f"raw_data/{vehicle['id']}/images/{vehicle['id']}_{img_index}.jpg"
+            urllib.request.urlretrieve(img_url, img_path)
+            img_index += 1
+
     def search_vehicle_type(self, make_type="Lotus", model_type="Elise", postcode="BA229SZ"):
 
         postcode_input = self.driver.find_element(by=By.XPATH, value="//input[@id='postcode']")
@@ -156,16 +164,7 @@ class Autotrader_scraper:
             with open(f"raw_data/{vehicle['id']}/data.json", 'w') as of:
                 of.write(json_object)
 
-            self.__download_imgs(vehicle)
-    
-    def __download_imgs(self, vehicle):
-        if not os.path.exists(f"raw_data/{vehicle['id']}/images"):
-            os.mkdir(f"raw_data/{vehicle['id']}/images")
-        img_index = 0
-        for img_url in vehicle['data']['img']:
-            img_path = f"raw_data/{vehicle['id']}/images/{vehicle['id']}_{img_index}.jpg"
-            urllib.request.urlretrieve(img_url, img_path)
-            img_index += 1
+            self.__download_images(vehicle)
 
     def close(self):
         self.driver.close()
