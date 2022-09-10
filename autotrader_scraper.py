@@ -11,6 +11,7 @@ import os
 from random import uniform
 from uuid import uuid4
 import json
+import urllib.request
 
 class Autotrader_scraper:
     def __init__(self):
@@ -155,9 +156,16 @@ class Autotrader_scraper:
             with open(f"raw_data/{vehicle['id']}/data.json", 'w') as of:
                 of.write(json_object)
 
-        
-
-        
+            self.__download_imgs(vehicle)
+    
+    def __download_imgs(self, vehicle):
+        if not os.path.exists(f"raw_data/{vehicle['id']}/images"):
+            os.mkdir(f"raw_data/{vehicle['id']}/images")
+        img_index = 0
+        for img_url in vehicle['data']['img']:
+            img_path = f"raw_data/{vehicle['id']}/images/{vehicle['id']}_{img_index}.jpg"
+            urllib.request.urlretrieve(img_url, img_path)
+            img_index += 1
 
     def close(self):
         self.driver.close()
