@@ -5,15 +5,18 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
-import time
-import re
-import os
 from random import uniform
 from uuid import uuid4
 import json
+import os
+import re
+import time
 import urllib.request
 
 class Autotrader_scraper:
+    """
+    Container class for the autotrader scraper tool.
+    """
     def __init__(self):
         self.url = "https://www.autotrader.co.uk"
         self.delay = 10
@@ -25,6 +28,9 @@ class Autotrader_scraper:
         self.__accept_cookies()
 
     def __sleep(self, duration = 1, distribution=0.2):
+        """
+        Sleep function used to add a random distribution to sleep commands, for reducing the liklihood of website detection
+        """
         time.sleep(duration + uniform(-distribution, distribution))
     def __accept_cookies(self):
         """
@@ -42,6 +48,13 @@ class Autotrader_scraper:
             print(f"Error accepting cookies")  
     
     def __parse_vehicle_list(self):
+        """
+        Parse all useful data from search results list, including URL, titles, price and location. 
+        Requires driver to be opened on search page URL.
+
+        Returns:
+            dict: Vehicle data from search pages.
+        """
         vehicle_list = []
         vehicles = self.driver.find_elements(by=By.XPATH, value="//li[@class='search-page__result']")
         for vehicle in vehicles:
@@ -54,6 +67,7 @@ class Autotrader_scraper:
                 vehicle_title = vehicle.find_element(by=By.CLASS_NAME, value="product-card-details__title").text.strip()
                 vehicle_subtitle = vehicle.find_element(by=By.CLASS_NAME, value="product-card-details__subtitle").text.strip()
                 vehicle_price = vehicle.find_element(by=By.CLASS_NAME, value="product-card-pricing__price").text.strip()
+                vehicle_price = int(re.sub('[^0-9]', '', vehicle_price))
                 vehicle_location = vehicle.find_elements(by=By.XPATH, value=".//span[@class='product-card-seller-info__spec-item-copy']")[-1].text
                 
                 vehicle_list.append({
@@ -69,6 +83,12 @@ class Autotrader_scraper:
                     })
         return vehicle_list
     def __parse_vehicle_page(self, vehicle_url):
+        """
+        Parses individual vehicle pages from a URL.
+
+        Returns:
+            dict: Additional vehicle data from vehicle page.
+        """
         self.driver.get(vehicle_url)
         self.__sleep(1)
 
@@ -77,6 +97,7 @@ class Autotrader_scraper:
         vehicle_img_list.append(img_track.find_element(by=By.XPATH, value=".//img").get_attribute("src"))
 
         vehicle_mileage = self.driver.find_element(by=By.XPATH, value="//span[@data-gui='mileage']").text.strip()
+        vehicle_mileage = int(re.sub("[^0-9]", "", vehicle_mileage))
 
         desc_button = self.driver.find_element(by=By.XPATH, value="//button[@class='sc-hQYpqk sc-feWZte sc-iyHPJt cDuRCe eFGeSa gexRyG atc-type-picanto atc-type-picanto--medium']")
         desc_button.click()
@@ -88,44 +109,60 @@ class Autotrader_scraper:
         vehicle_data = {
             "mileage" : vehicle_mileage,
             "description" : vehicle_desc,
-            "img" : vehicle_img_list
+            "imgs" : vehicle_img_list
         }
 
         return vehicle_data    
     def __download_images(self, vehicle):
+        """
+        Downloads all images to 'image' folder within vehicle id folder, given the list of images in the vehicle data.
+        """
         if not os.path.exists(f"raw_data/{vehicle['id']}/images"):
             os.mkdir(f"raw_data/{vehicle['id']}/images")
         img_index = 0
-        for img_url in vehicle['data']['img']:
+        for img_url in vehicle['data']['imgs']:
             img_path = f"raw_data/{vehicle['id']}/images/{vehicle['id']}_{img_index}.jpg"
             urllib.request.urlretrieve(img_url, img_path)
             img_index += 1
 
     def search_vehicle_type(self, make_type="Lotus", model_type="Elise", postcode="BA229SZ"):
+        """
+        Searches for vehicle make and model from Autotrader homepage.
+        """
+        def __add_postcode(postcode):
+            postcode_input = self.driver.find_element(by=By.XPATH, value="//input[@id='postcode']")
+            postcode_input.click()
+            postcode_input.send_keys(postcode)
+            self.__sleep(1)
+        def __select_make(make):
+            make_selection = Select(self.driver.find_element(by=By.XPATH, value="//select[@id='make']"))
+            make_selection.select_by_value(make_type)
+            WebDriverWait(self.driver, self.delay).until_not(EC.element_attribute_to_include((By.XPATH, "//select[@id='model']"), "disabled"))
+        def __select_model(model):
+            model_selection = Select(self.driver.find_element(by=By.XPATH, value="//select[@id='model']"))
+            model_selection.select_by_value(model_type)
+            self.__sleep(1)
+        def __click_search():
+            search_button = self.driver.find_element(by=By.XPATH, value="//button[@data-gui='search-cars-button']")
+            print(f"Clicking button \"{search_button.text}\"")
+            search_button.click()
+            self.__sleep(1)
+            search_button.click() # Second click necessary to accound for page scrolling and updating webpage.
+            self.__sleep(1)
 
-        postcode_input = self.driver.find_element(by=By.XPATH, value="//input[@id='postcode']")
-        postcode_input.click()
-        postcode_input.send_keys(postcode)
-        self.__sleep(1)
-
-        make_selection = Select(self.driver.find_element(by=By.XPATH, value="//select[@id='make']"))
-        make_selection.select_by_value(make_type)
-        WebDriverWait(self.driver, self.delay).until_not(EC.element_attribute_to_include((By.XPATH, "//select[@id='model']"), "disabled"))
-        model_selection = Select(self.driver.find_element(by=By.XPATH, value="//select[@id='model']"))
-        model_selection.select_by_value(model_type)
-        self.__sleep(1)
-
-        
-        search_button = self.driver.find_element(by=By.XPATH, value="//button[@data-gui='search-cars-button']")
-        print(f"Clicking button \"{search_button.text}\"")
-        search_button.click()
-        self.__sleep(1)
-        search_button.click()
-        self.__sleep(1)
-
+        __add_postcode(postcode)
+        __select_make(make_type)
+        __select_model(model_type)
+        __click_search()
         print(f"Searching for {make_type} {model_type}")
     def get_vehicle_list(self, max_pages=0):
+        """
+        Navigates through all search pages to create vehicle list of top level data, up to a max_page limit.
+        By default all pages will be scraped.
 
+        Returns:
+            list: Vehicle list in array of dictionaries.
+        """
         search_url = self.driver.current_url[:-1]
 
         if max_pages == 0:
@@ -144,13 +181,22 @@ class Autotrader_scraper:
 
         return vehicle_list
     def add_vehicle_page_data(self, vehicle_list):
+        """
+        Navigates to vehicle page and adds additional data not available on the search results pages.
+
+        Returns:
+            list: Updated vehicle list including new data from each vehicle page.
+        """
         for i in range(len(vehicle_list)):
             new_vehicle_data = self.__parse_vehicle_page(vehicle_list[i]['data']['href'])
             vehicle_list[i]['data'].update(new_vehicle_data)
             self.__sleep(0.5)
         return vehicle_list
-
     def save_data(self, vehicle_data):
+        """
+        Stores vehicle data in JSON format, and images in JPG format, in the 'raw_data' file structure.
+        Data is stored under a unqiue ID for each vehicle.
+        """
         if not os.path.exists('raw_data'):
             os.mkdir('raw_data')
 
@@ -167,14 +213,15 @@ class Autotrader_scraper:
             self.__download_images(vehicle)
 
     def close(self):
+        """
+        Closes the browser session.
+        """
         self.driver.close()
 
 if __name__ == "__main__":
     test = Autotrader_scraper()
     test.search_vehicle_type("Lotus", "Exige")
     results = test.get_vehicle_list(1)
-    print(results[0])
     results = test.add_vehicle_page_data(results)
     test.save_data(results)
-    print(results[0])
     test.close()
