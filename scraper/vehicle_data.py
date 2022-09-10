@@ -4,6 +4,9 @@ import os
 import urllib.request
 
 class Vehicle_data:
+    """
+    Template class for storing vehicle data for each vehicle.
+    """
     def __init__(self, vehicle_id):
         self.__vehicle_id = vehicle_id
         self.__UUID = str(uuid4())
@@ -19,6 +22,11 @@ class Vehicle_data:
         }
 
     def add_data(self, **kwargs):
+        """
+        Adds data to the existing Vehicle_data object.
+        Args:
+            **kwargs (key = value): Input key/value pairs which are present in the Vehicle_data class template.
+        """
         for key, value in kwargs.items():
             if key == "img":
                 if not isinstance(value, list):
@@ -34,16 +42,34 @@ class Vehicle_data:
                 raise KeyError("Invalid key in vehicle data entry")
 
     def get_data(self):
+        """
+        Returns Vehicle_data in dictionary format.
+        Returns:
+            dict: Vehicle_data in {id:, uuid:, data:{}} format.
+        """
         return {
             "id" : self.__vehicle_id,
             "uuid" : self.__UUID,
             "data" : self.__data
         }
     def get_url(self):
+        """
+        Returns:
+            str: URL for Vehicle_data
+        """
         return self.__data["href"]
     def get_id(self):
+        """
+        Returns:
+            str: Autotrader unique ID for Vehicle_data
+        """
         return self.__vehicle_id
     def download_images(self):
+        """
+        Downloads image data from the given img src addresses stored within Vehicle_data.
+        File are output in the following location:
+            raw_data/vehicle_id/images/vehicle_id_index.jpg
+        """
         if not os.path.exists(f"raw_data/{self.__vehicle_id}/images"):
             os.mkdir(f"raw_data/{self.__vehicle_id}/images")
         img_index = 0
@@ -52,6 +78,10 @@ class Vehicle_data:
             urllib.request.urlretrieve(img_url, img_path)
             img_index += 1
     def save_JSON(self):
+        """
+        Saves Vehicle_data to JSON format in the following location:
+            raw_data/vehicle_id/data.json
+        """
         if not os.path.exists(f"raw_data/{self.__vehicle_id}"):
             os.mkdir(f"raw_data/{self.__vehicle_id}")
         else:
