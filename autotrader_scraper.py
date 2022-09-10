@@ -7,8 +7,10 @@ from selenium.webdriver.common.keys import Keys
 
 import time
 import re
+import os
 from random import uniform
 from uuid import uuid4
+import json
 
 class Autotrader_scraper:
     def __init__(self):
@@ -55,7 +57,7 @@ class Autotrader_scraper:
                 
                 vehicle_list.append({
                     "id"   : vehicle_id,
-                    "uuid" : uuid4(),
+                    "uuid" : str(uuid4()),
                     "data" : {
                         "href"     : vehicle_href,
                         "title"    : vehicle_title, 
@@ -139,16 +141,33 @@ class Autotrader_scraper:
             self.__sleep(0.5)
         return vehicle_list
 
+    def save_data(self, vehicle_data):
+        if not os.path.exists('raw_data'):
+            os.mkdir('raw_data')
+
+        for vehicle in vehicle_data:
+            if not os.path.exists(f"raw_data/{vehicle['id']}"):
+                os.mkdir(f"raw_data/{vehicle['id']}")
+            else:
+                print(f"Veh id {vehicle['id']} already exists!")
+            
+            json_object = json.dumps(vehicle, indent=4)
+            with open(f"raw_data/{vehicle['id']}/data.json", 'w') as of:
+                of.write(json_object)
+
+        
+
+        
+
     def close(self):
         self.driver.close()
-
-
 
 if __name__ == "__main__":
     test = Autotrader_scraper()
     test.search_vehicle_type("Lotus", "Exige")
     results = test.get_vehicle_list(1)
     print(results[0])
-    results = test.add_vehicle_page_data(results[:1])
+    results = test.add_vehicle_page_data(results)
+    test.save_data(results)
     print(results[0])
     test.close()
