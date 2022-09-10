@@ -6,6 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
 from random import uniform
+from timer import Timer
 from uuid import uuid4
 import json
 import os
@@ -53,34 +54,39 @@ class Autotrader_scraper:
         Requires driver to be opened on search page URL.
 
         Returns:
-            dict: Vehicle data from search pages.
+            dict: Vehicle data from current search page.
         """
         vehicle_list = []
         vehicles = self.driver.find_elements(by=By.XPATH, value="//li[@class='search-page__result']")
-        for vehicle in vehicles:
-            vehicle_standout = vehicle.find_elements(by=By.XPATH, value="span")
-            if vehicle_standout and vehicle_standout[0].text == 'Ad':
-                continue
-            else:
-                vehicle_href = vehicle.find_element(by=By.XPATH, value="article/a").get_attribute('href')
-                vehicle_id = re.findall('[0-9]{15}', vehicle_href)[0]
-                vehicle_title = vehicle.find_element(by=By.CLASS_NAME, value="product-card-details__title").text.strip()
-                vehicle_subtitle = vehicle.find_element(by=By.CLASS_NAME, value="product-card-details__subtitle").text.strip()
-                vehicle_price = vehicle.find_element(by=By.CLASS_NAME, value="product-card-pricing__price").text.strip()
-                vehicle_price = int(re.sub('[^0-9]', '', vehicle_price))
-                vehicle_location = vehicle.find_elements(by=By.XPATH, value=".//span[@class='product-card-seller-info__spec-item-copy']")[-1].text
-                
-                vehicle_list.append({
-                    "id"   : vehicle_id,
-                    "uuid" : str(uuid4()),
-                    "data" : {
-                        "href"     : vehicle_href,
-                        "title"    : vehicle_title, 
-                        "subtitle" : vehicle_subtitle,
-                        "price"    : vehicle_price,
-                        "location" : vehicle_location
-                        }
-                    })
+        element_id = 0
+        with Timer(text="Search page data scrape: " + "Elapsed time: {:0.4f} seconds"):
+            for vehicle in vehicles:
+                if vehicle.get_attribute('data-is-promoted-listing')=="true":
+                    print("Ad found")
+                    continue
+                else:
+                    with Timer(text=f"Get veh data {element_id}: " + "Elapsed time: {:0.4f} seconds"):
+                        vehicle_href = vehicle.find_element(by=By.XPATH, value="article/a").get_attribute('href')
+                        vehicle_id = re.findall('[0-9]{15}', vehicle_href)[0]
+                        vehicle_title = vehicle.find_element(by=By.CLASS_NAME, value="product-card-details__title").text.strip()
+                        vehicle_subtitle = vehicle.find_element(by=By.CLASS_NAME, value="product-card-details__subtitle").text.strip()
+                        vehicle_price = vehicle.find_element(by=By.CLASS_NAME, value="product-card-pricing__price").text.strip()
+                        vehicle_price = int(re.sub('[^0-9]', '', vehicle_price))
+                        vehicle_location = vehicle.find_elements(by=By.XPATH, value=".//span[@class='product-card-seller-info__spec-item-copy']")[-1].text
+
+                    with Timer(text=f"Write dict {element_id}: " + "Elapsed time: {:0.4f} seconds"):
+                        vehicle_list.append({
+                            "id"   : vehicle_id,
+                            "uuid" : str(uuid4()),
+                            "data" : {
+                                "href"     : vehicle_href,
+                                "title"    : vehicle_title, 
+                                "subtitle" : vehicle_subtitle,
+                                "price"    : vehicle_price,
+                                "location" : vehicle_location
+                                }
+                            })
+                    element_id += 1
         return vehicle_list
     def __parse_vehicle_page(self, vehicle_url):
         """
@@ -221,7 +227,7 @@ class Autotrader_scraper:
 if __name__ == "__main__":
     test = Autotrader_scraper()
     test.search_vehicle_type("Lotus", "Exige")
-    results = test.get_vehicle_list(1)
+    results = test.get_vehicle_list(max_pages = 1)
     results = test.add_vehicle_page_data(results)
     test.save_data(results)
     test.close()
