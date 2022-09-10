@@ -1,8 +1,11 @@
 from scraper.autotrader_scraper import Autotrader_scraper
 from scraper.timer import Timer
+from bs4 import BeautifulSoup
+import urllib.request
+import re
 
-def test_result(is_pass):
-    return "PASS" if is_pass else "FAIL"
+def print_test_result(is_pass, test_case_name):
+    print(f"Test case: {test_case_name} --> {'PASS' if is_pass else 'FAIL'}")
 
 def test_search_vehicle_type():
     with Timer():
@@ -12,11 +15,22 @@ def test_search_vehicle_type():
         new_url = test_scraper.driver.current_url[:-1]
         test_scraper.close_session()
         is_pass = init_url != new_url
-        print(f"Test case: test_search_vehicle_type() --> {test_result(is_pass)}")
+        print_test_result(is_pass, "test_search_vehicle_type()")
 
 def test_get_vehicle_list():
-    pass
-
+    def scrape_num_results(test_search_results_url):
+        page = urllib.request.urlopen(test_search_results_url)
+        soup = BeautifulSoup(page, 'html.parser')
+        num_results = soup.find('h1', class_='search-form__count js-results-count').get_text()
+        return int(re.sub("[^0-9]",'',num_results))
+    test_search_results_url = "https://www.autotrader.co.uk/car-search?postcode=ba229sz&make=Lotus&model=Exige&include-delivery-option=on&advertising-location=at_cars&page=1"
+    with Timer():
+        test_scraper = Autotrader_scraper(test_search_results_url)
+        vehicle_data_list = test_scraper.get_vehicle_list()
+        test_scraper.close_session()
+        is_pass = len(vehicle_data_list) == scrape_num_results(test_search_results_url)
+        print_test_result(is_pass, "test_get_vehicle_list()")
 
 if __name__ == "__main__":
-    test_search_vehicle_type()
+    #test_search_vehicle_type()
+    test_get_vehicle_list()
