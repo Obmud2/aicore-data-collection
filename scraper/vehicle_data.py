@@ -21,6 +21,33 @@ class Vehicle_data:
             "img" : []
         }
 
+    def __download_images(self):
+        """
+        Downloads image data from the given img src addresses stored within Vehicle_data.
+        File are output in the following location:
+            raw_data/vehicle_id/images/vehicle_id_index.jpg
+        """
+        if not os.path.exists(f"raw_data/{self.__vehicle_id}/images"):
+            os.mkdir(f"raw_data/{self.__vehicle_id}/images")
+        img_index = 0
+        for img_url in self.__data['img']:
+            img_path = f"raw_data/{self.__vehicle_id}/images/{self.__vehicle_id}_{img_index}.jpg"
+            urllib.request.urlretrieve(img_url, img_path)
+            img_index += 1
+    def __save_JSON(self):
+        """
+        Saves Vehicle_data to JSON format in the following location:
+            raw_data/vehicle_id/data.json
+        """
+        if not os.path.exists(f"raw_data/{self.__vehicle_id}"):
+            os.mkdir(f"raw_data/{self.__vehicle_id}")
+        else:
+            print(f"Veh id {self.__vehicle_id} already exists!")
+            
+        json_object = json.dumps(self.get_data(), indent=4)
+        with open(f"raw_data/{self.__vehicle_id}/data.json", 'w') as of:
+            of.write(json_object)
+
     def add_data(self, **kwargs):
         """
         Adds data to the existing Vehicle_data object.
@@ -40,7 +67,6 @@ class Vehicle_data:
                 self.__data[key] = value
             else:
                 raise KeyError("Invalid key in vehicle data entry")
-
     def get_data(self):
         """
         Returns Vehicle_data in dictionary format.
@@ -64,29 +90,10 @@ class Vehicle_data:
             str: Autotrader unique ID for Vehicle_data
         """
         return self.__vehicle_id
-    def download_images(self):
+    def save_data(self):
         """
-        Downloads image data from the given img src addresses stored within Vehicle_data.
-        File are output in the following location:
-            raw_data/vehicle_id/images/vehicle_id_index.jpg
+        Downloads images and saves JSON data for Vehicle_data in file structure:
+            raw_data/vehicle_id/
         """
-        if not os.path.exists(f"raw_data/{self.__vehicle_id}/images"):
-            os.mkdir(f"raw_data/{self.__vehicle_id}/images")
-        img_index = 0
-        for img_url in self.__data['img']:
-            img_path = f"raw_data/{self.__vehicle_id}/images/{self.__vehicle_id}_{img_index}.jpg"
-            urllib.request.urlretrieve(img_url, img_path)
-            img_index += 1
-    def save_JSON(self):
-        """
-        Saves Vehicle_data to JSON format in the following location:
-            raw_data/vehicle_id/data.json
-        """
-        if not os.path.exists(f"raw_data/{self.__vehicle_id}"):
-            os.mkdir(f"raw_data/{self.__vehicle_id}")
-        else:
-            print(f"Veh id {self.__vehicle_id} already exists!")
-            
-        json_object = json.dumps(self.get_data(), indent=4)
-        with open(f"raw_data/{self.__vehicle_id}/data.json", 'w') as of:
-            of.write(json_object)
+        self.__save_JSON()
+        self.__download_images()

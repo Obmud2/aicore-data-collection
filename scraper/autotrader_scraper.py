@@ -198,17 +198,6 @@ class Autotrader_scraper:
             vehicle_list[vehicle_index] = self.__parse_vehicle_page(vehicle_list[vehicle_index])
         return vehicle_list
 
-    def save_data(self, vehicle_list):
-        """
-        Stores vehicle data in JSON format, and images in JPG format, in the 'raw_data' file structure.
-        Data is stored under a unqiue ID folder for each vehicle.
-        Args:
-            vehicle_list (list[Vehicle_data]): List of scraped data for each vehicle in Vehicle_data class format.
-        """
-        for vehicle_data in vehicle_list:
-            vehicle_data.save_JSON()
-            vehicle_data.download_images()
-
     def close_session(self):
         """
         Closes the browser session.
@@ -221,4 +210,5 @@ if __name__ == "__main__":
     vehicle_data_list = scraper.get_vehicle_list(max_pages = 1)
     vehicle_data_list = scraper.add_vehicle_page_data(vehicle_data_list)
     scraper.close_session()
-    scraper.save_data(vehicle_data_list)
+    for vehicle_data in vehicle_data_list:
+        vehicle_data.save_data()
