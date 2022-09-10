@@ -90,7 +90,7 @@ class Autotrader_scraper:
             dict: Additional vehicle data from vehicle page.
         """
         self.driver.get(vehicle_url)
-        self.__sleep(1)
+        self.__sleep(0.5, 0)
 
         img_track = self.driver.find_element(by=By.XPATH, value="//div[@class='slick-track']")
         vehicle_img_list = []
@@ -102,7 +102,6 @@ class Autotrader_scraper:
         desc_button = self.driver.find_element(by=By.XPATH, value="//button[@class='sc-hQYpqk sc-feWZte sc-iyHPJt cDuRCe eFGeSa gexRyG atc-type-picanto atc-type-picanto--medium']")
         desc_button.click()
         vehicle_desc = self.driver.find_element(by=By.XPATH, value="//p[@class='sc-ffgBur byDqpY atc-type-picanto']").text.strip()
-        self.__sleep(0.2, 0)
         desc_exit_button = self.driver.find_element(by=By.XPATH, value="//button[@aria-label='Close']")
         desc_exit_button.click()
 
@@ -164,6 +163,7 @@ class Autotrader_scraper:
             list: Vehicle list in array of dictionaries.
         """
         search_url = self.driver.current_url[:-1]
+        vehicle_list = []
 
         if max_pages == 0:
             pages_text = self.driver.find_element(by=By.XPATH, value="//li[@class='paginationMini__count']").text
@@ -176,8 +176,7 @@ class Autotrader_scraper:
             if page != 1:
                 self.driver.get(f"{search_url}{page}")
             self.__sleep(1)
-
-        vehicle_list = self.__parse_vehicle_list()
+            vehicle_list += self.__parse_vehicle_list()
 
         return vehicle_list
     def add_vehicle_page_data(self, vehicle_list):
@@ -190,7 +189,6 @@ class Autotrader_scraper:
         for i in range(len(vehicle_list)):
             new_vehicle_data = self.__parse_vehicle_page(vehicle_list[i]['data']['href'])
             vehicle_list[i]['data'].update(new_vehicle_data)
-            self.__sleep(0.5)
         return vehicle_list
     def save_data(self, vehicle_data):
         """
@@ -212,7 +210,7 @@ class Autotrader_scraper:
 
             self.__download_images(vehicle)
 
-    def close(self):
+    def close_session(self):
         """
         Closes the browser session.
         """
@@ -221,7 +219,7 @@ class Autotrader_scraper:
 if __name__ == "__main__":
     test = Autotrader_scraper()
     test.search_vehicle_type("Lotus", "Exige")
-    results = test.get_vehicle_list(max_pages = 1)
+    results = test.get_vehicle_list(max_pages = 0)
     results = test.add_vehicle_page_data(results)
     test.save_data(results)
-    test.close()
+    test.close_session()
