@@ -1,3 +1,4 @@
+import imp
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
@@ -5,8 +6,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
 from random import uniform
-from timer import Timer
-from vehicle_data import Vehicle_data
+from scraper.vehicle_data import Vehicle_data
+from scraper.timer import Timer
 import re
 import time
 
@@ -26,7 +27,10 @@ class Autotrader_scraper:
 
     def __sleep(self, duration = 1, distribution=0.2):
         """
-        Sleep function used to add a random distribution to sleep commands, for reducing the liklihood of website detection
+        Sleep function used to add a random distribution to sleep commands, for reducing the liklihood of website detection.
+        Args:
+            duration (float): Nominal duration for sleep timer.
+            distribution (float): Bounds of uniform distribution +/- nominal duration.
         """
         time.sleep(duration + uniform(-distribution, distribution))
     def __accept_cookies(self):
@@ -91,9 +95,10 @@ class Autotrader_scraper:
     def __parse_vehicle_page(self, vehicle_data):
         """
         Parses individual vehicle pages from a URL.
-
+        Args:
+            vehicle_data (Vehicle_data): Scraped data from individual vehicle. Vehicle data must include href(url). 
         Returns:
-            dict: Additional vehicle data from vehicle page.
+            Vehicle_data: Vehicle_data type including additional vehicle data scraped from vehicle page.
         """
         self.driver.get(vehicle_data.get_url())
         self.__sleep(0.5, 0)
@@ -121,7 +126,11 @@ class Autotrader_scraper:
 
     def search_vehicle_type(self, make_type="Lotus", model_type="Elise", postcode="BA229SZ"):
         """
-        Searches for vehicle make and model from Autotrader homepage.
+        Searches for vehicle make and model from Autotrader homepage. Navigates driver to first search results page.
+        Args:
+            make_type (str): Make of vehicle from Autotrader list.
+            model_type (str): Model of vehicle from Autotrader list.
+            postcode (str): Postcode required to search Autotrader.
         """
         def __add_postcode(postcode):
             postcode_input = self.driver.find_element(by=By.XPATH, value="//input[@id='postcode']")
@@ -153,7 +162,8 @@ class Autotrader_scraper:
         """
         Navigates through all search pages to create vehicle list of top level data, up to a max_page limit.
         By default all pages will be scraped.
-
+        Args:
+            max_pages (int): Maximum number of pages to scrape. Default=0 is all pages.
         Returns:
             list: Vehicle list in array of dictionaries.
         """
@@ -173,13 +183,13 @@ class Autotrader_scraper:
             self.__sleep(1)
             vehicle_list += self.__parse_vehicle_list()
 
-        return vehicle_list
-
-    
+        return vehicle_list   
     def add_vehicle_page_data(self, vehicle_list):
         """
         Navigates to vehicle page and adds additional data not available on the search results pages.
 
+        Args:
+            vehicle_list (list[Vehicle_data]): List of scraped data for each vehicle in Vehicle_data class format.
         Returns:
             list: Updated vehicle list including new data from each vehicle page.
         """
@@ -190,7 +200,9 @@ class Autotrader_scraper:
     def save_data(self, vehicle_list):
         """
         Stores vehicle data in JSON format, and images in JPG format, in the 'raw_data' file structure.
-        Data is stored under a unqiue ID for each vehicle.
+        Data is stored under a unqiue ID folder for each vehicle.
+        Args:
+            vehicle_list (list[Vehicle_data]): List of scraped data for each vehicle in Vehicle_data class format.
         """
         for vehicle_data in vehicle_list:
             vehicle_data.save_JSON()
