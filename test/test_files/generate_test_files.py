@@ -5,7 +5,7 @@ from scraper.vehicle_data import Vehicle_data
 
 if __name__ == "__main__":
     scraper = Autotrader_scraper()
-    scraper.search_vehicle_type("Lotus", "Elise")
+    scraper.search_vehicle_type("Lotus", "Exige")
     vehicle_data_list = scraper.get_vehicle_list(max_pages = 1)
     vehicle_data_list_json = []
     for vehicle in vehicle_data_list:

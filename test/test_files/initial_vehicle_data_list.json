@@ -1,54 +1,96 @@
 [
     {
-        "id": "202206307323930",
-        "uuid": "b82a50af-9651-45fa-af8f-606ae0d3a22a",
+        "id": "202208229024132",
+        "uuid": "654f760e-b8ba-4174-8011-5de2ddc13c1c",
         "data": {
-            "href": "https://www.autotrader.co.uk/car-details/202206307323930?postcode=ba229sz&sort=relevance&advertising-location=at_cars&radius=1501&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&model=Elise&include-delivery-option=on&make=Lotus&page=1",
-            "title": "Lotus Elise",
-            "subtitle": "1.8 2dr",
-            "price": 15800,
-            "location": "bournemouth",
+            "href": "https://www.autotrader.co.uk/car-details/202208229024132?postcode=ba229sz&sort=relevance&advertising-location=at_cars&radius=1501&model=Exige&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&make=Lotus&include-delivery-option=on&page=1&percentVehiclePriceDeposit=true",
+            "title": "Lotus Exige",
+            "subtitle": "3.5 V6 S Euro 5 2dr",
+            "price": 42000,
+            "location": "st. albans",
             "mileage": null,
             "description": null,
             "img": []
         }
     },
     {
-        "id": "202209109640026",
-        "uuid": "446c69c2-dd0e-4511-a8ee-b2eb2ff2f629",
+        "id": "202209089560165",
+        "uuid": "cef757a3-e918-43d0-8bb5-3874979f72ed",
         "data": {
-            "href": "https://www.autotrader.co.uk/car-details/202209109640026?postcode=ba229sz&sort=relevance&advertising-location=at_cars&radius=1501&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&model=Elise&include-delivery-option=on&make=Lotus&page=1&percentVehiclePriceDeposit=true",
-            "title": "Lotus Elise",
-            "subtitle": "1.6 Euro 5 2dr",
-            "price": 21995,
-            "location": "bishop's stortford",
+            "href": "https://www.autotrader.co.uk/car-details/202209089560165?postcode=ba229sz&sort=relevance&advertising-location=at_cars&radius=1501&model=Exige&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&make=Lotus&include-delivery-option=on&page=1&percentVehiclePriceDeposit=true",
+            "title": "Lotus Exige",
+            "subtitle": "1.8 S Sports Touring Performance Euro 4 2dr",
+            "price": 36911,
+            "location": "newark",
             "mileage": null,
             "description": null,
             "img": []
         }
     },
     {
-        "id": "202207067511863",
-        "uuid": "fb546415-b244-416e-90c6-600953470571",
+        "id": "202206297291765",
+        "uuid": "553401db-7332-4d92-b38a-6cc4f2e69666",
         "data": {
-            "href": "https://www.autotrader.co.uk/car-details/202207067511863?postcode=ba229sz&sort=relevance&advertising-location=at_cars&radius=1501&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&model=Elise&include-delivery-option=on&make=Lotus&page=1",
-            "title": "Lotus Elise",
-            "subtitle": "1.8 111S 2dr",
-            "price": 17500,
-            "location": "bromsgrove",
+            "href": "https://www.autotrader.co.uk/car-details/202206297291765?postcode=ba229sz&sort=relevance&advertising-location=at_cars&radius=1501&model=Exige&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&make=Lotus&include-delivery-option=on&page=1&percentVehiclePriceDeposit=true",
+            "title": "Lotus Exige",
+            "subtitle": "3.5 V6 410 SPORT 2DR",
+            "price": 73950,
+            "location": "poole",
             "mileage": null,
             "description": null,
             "img": []
         }
     },
     {
-        "id": "202208098635935",
-        "uuid": "53d0f64a-64c3-4bf3-a160-b51ef2b680e5",
+        "id": "202208028400038",
+        "uuid": "8f52ff6e-7468-4e3c-b78c-3178d159c6c7",
         "data": {
-            "href": "https://www.autotrader.co.uk/car-details/202208098635935?postcode=ba229sz&sort=relevance&advertising-location=at_cars&radius=1501&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&model=Elise&include-delivery-option=on&make=Lotus&page=1",
-            "title": "Lotus Elise",
-            "subtitle": "ELISE SC TOURING 2DR 1.8",
-            "price": 31990,
+            "href": "https://www.autotrader.co.uk/car-details/202208028400038?postcode=ba229sz&sort=relevance&advertising-location=at_cars&radius=1501&model=Exige&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&make=Lotus&include-delivery-option=on&page=1&percentVehiclePriceDeposit=true",
+            "title": "Lotus Exige",
+            "subtitle": "V6 Cup Bell & Colvill Black Edition 3.5 2dr",
+            "price": 59990,
+            "location": "chichester",
+            "mileage": null,
+            "description": null,
+            "img": []
+        }
+    },
+    {
+        "id": "202209019336737",
+        "uuid": "e117f6f8-dbf1-43d9-9157-05847d5001c0",
+        "data": {
+            "href": "https://www.autotrader.co.uk/car-details/202209019336737?postcode=ba229sz&sort=relevance&advertising-location=at_cars&radius=1501&model=Exige&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&make=Lotus&include-delivery-option=on&page=1&percentVehiclePriceDeposit=true",
+            "title": "Lotus Exige",
+            "subtitle": "V6 S RACE AND PREMIUM SPORT 3.5 2dr",
+            "price": 47990,
+            "location": "chichester",
+            "mileage": null,
+            "description": null,
+            "img": []
+        }
+    },
+    {
+        "id": "202205055376734",
+        "uuid": "3fabbe6b-a42f-462b-8d94-ebbafc615996",
+        "data": {
+            "href": "https://www.autotrader.co.uk/car-details/202205055376734?postcode=ba229sz&sort=relevance&advertising-location=at_cars&radius=1501&model=Exige&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&make=Lotus&include-delivery-option=on&page=1&percentVehiclePriceDeposit=true",
+            "title": "Lotus Exige",
+            "subtitle": "3.5 V6 Sport 350 Auto Euro 6 2dr",
+            "price": 55000,
+            "location": "leicester",
+            "mileage": null,
+            "description": null,
+            "img": []
+        }
+    },
+    {
+        "id": "202208098626852",
+        "uuid": "e80be6b4-a681-4a3a-be4f-5e76321a6532",
+        "data": {
+            "href": "https://www.autotrader.co.uk/car-details/202208098626852?postcode=ba229sz&sort=relevance&advertising-location=at_cars&radius=1501&model=Exige&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&make=Lotus&include-delivery-option=on&page=1&percentVehiclePriceDeposit=true",
+            "title": "Lotus Exige",
+            "subtitle": "3.5 V6 410 SPORT 2DR",
+            "price": 79990,
             "location": "exeter",
             "mileage": null,
             "description": null,
@@ -56,84 +98,42 @@
         }
     },
     {
-        "id": "202209099594821",
-        "uuid": "25eb3e94-f0d9-487d-968d-e808ada43c7d",
+        "id": "202206287243795",
+        "uuid": "67920fe5-8a4f-4e8b-a998-465c3e787a5a",
         "data": {
-            "href": "https://www.autotrader.co.uk/car-details/202209099594821?postcode=ba229sz&sort=relevance&advertising-location=at_cars&radius=1501&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&model=Elise&include-delivery-option=on&make=Lotus&page=1",
-            "title": "Lotus Elise",
-            "subtitle": "1.8 R 2dr",
-            "price": 34995,
-            "location": "bristol",
+            "href": "https://www.autotrader.co.uk/car-details/202206287243795?postcode=ba229sz&sort=relevance&advertising-location=at_cars&radius=1501&model=Exige&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&make=Lotus&include-delivery-option=on&page=1&percentVehiclePriceDeposit=true",
+            "title": "Lotus Exige",
+            "subtitle": "3.5 V6 S Euro 5 2dr",
+            "price": 47480,
+            "location": "sutton-in-ashfield",
             "mileage": null,
             "description": null,
             "img": []
         }
     },
     {
-        "id": "202209029367565",
-        "uuid": "0fd1c3ab-7b7e-4223-badc-c42d3da57275",
+        "id": "202208088588766",
+        "uuid": "ad308aab-3cbc-4bc0-969a-c28de43bed41",
         "data": {
-            "href": "https://www.autotrader.co.uk/car-details/202209029367565?postcode=ba229sz&sort=relevance&advertising-location=at_cars&radius=1501&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&model=Elise&include-delivery-option=on&make=Lotus&page=1&percentVehiclePriceDeposit=true",
-            "title": "Lotus Elise",
-            "subtitle": "1.6 Sport Euro 6 2dr",
-            "price": 29950,
-            "location": "henley-on-thames",
+            "href": "https://www.autotrader.co.uk/car-details/202208088588766?postcode=ba229sz&sort=relevance&advertising-location=at_cars&radius=1501&model=Exige&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&make=Lotus&include-delivery-option=on&page=1",
+            "title": "Lotus Exige",
+            "subtitle": "3.5 V6 S Euro 5 2dr",
+            "price": 44000,
+            "location": "bishop's stortford",
             "mileage": null,
             "description": null,
             "img": []
         }
     },
     {
-        "id": "202206277207389",
-        "uuid": "d298d7d7-65b4-439d-a4f7-46f274f0e987",
+        "id": "202208158790188",
+        "uuid": "0e682d23-8aba-4152-b3fb-9fee45531a56",
         "data": {
-            "href": "https://www.autotrader.co.uk/car-details/202206277207389?postcode=ba229sz&sort=relevance&advertising-location=at_cars&radius=1501&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&model=Elise&include-delivery-option=on&make=Lotus&page=1",
-            "title": "Lotus Elise",
-            "subtitle": "Elise 2dr 1.8",
-            "price": 18495,
-            "location": "swindon",
-            "mileage": null,
-            "description": null,
-            "img": []
-        }
-    },
-    {
-        "id": "202209039392545",
-        "uuid": "49120e50-1bd4-4d84-8fdf-83415caa4db3",
-        "data": {
-            "href": "https://www.autotrader.co.uk/car-details/202209039392545?postcode=ba229sz&sort=relevance&advertising-location=at_cars&radius=1501&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&model=Elise&include-delivery-option=on&make=Lotus&page=1",
-            "title": "Lotus Elise",
-            "subtitle": "1.8 135R Convertible 2dr Petrol Manual (185 g/km, 135 bhp)",
-            "price": 19990,
-            "location": "winchmore hill",
-            "mileage": null,
-            "description": null,
-            "img": []
-        }
-    },
-    {
-        "id": "202209069503819",
-        "uuid": "bd497d92-18a7-43b9-b46e-e045275b06b1",
-        "data": {
-            "href": "https://www.autotrader.co.uk/car-details/202209069503819?postcode=ba229sz&sort=relevance&advertising-location=at_cars&radius=1501&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&model=Elise&include-delivery-option=on&make=Lotus&page=1",
-            "title": "Lotus Elise",
-            "subtitle": "1.8 2dr",
-            "price": 13850,
-            "location": "bangor",
-            "mileage": null,
-            "description": null,
-            "img": []
-        }
-    },
-    {
-        "id": "202207147782169",
-        "uuid": "cea9d6df-bd2e-4b2e-b688-7f5d855937f5",
-        "data": {
-            "href": "https://www.autotrader.co.uk/car-details/202207147782169?postcode=ba229sz&sort=relevance&advertising-location=at_cars&radius=1501&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&model=Elise&include-delivery-option=on&make=Lotus&page=1",
-            "title": "Lotus Elise",
-            "subtitle": "1.8 1.8 2d 118 BHP",
-            "price": 25950,
-            "location": "bourne end",
+            "href": "https://www.autotrader.co.uk/car-details/202208158790188?postcode=ba229sz&sort=relevance&advertising-location=at_cars&radius=1501&model=Exige&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&make=Lotus&include-delivery-option=on&page=1",
+            "title": "Lotus Exige",
+            "subtitle": "3.5 V6 Cup 430 Final Edition Coupe 2dr Petrol Manual Euro 6 (436 ps)",
+            "price": 95000,
+            "location": "nottingham",
             "mileage": null,
             "description": null,
             "img": []
