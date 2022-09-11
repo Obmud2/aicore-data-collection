@@ -6,6 +6,8 @@ import os
 import urllib.request
 import re
 
+from scraper.vehicle_data import Vehicle_data
+
 def print_test_result(is_pass, test_case_name):
     print(f"Test case: {test_case_name} --> {'PASS' if is_pass else 'FAIL'}")
 
@@ -23,7 +25,7 @@ def test_search_vehicle_type():
         test_scraper.close_session()
         is_pass = init_url != new_url and test_make in new_url and test_model in new_url
         print_test_result(is_pass, "test_search_vehicle_type()")
-def test_get_vehicle_list():
+def test_get_vehicle_list() -> list[Vehicle_data]:
     """
     Check that number of listed vehicles matches number of results scraped.
     """
@@ -40,7 +42,7 @@ def test_get_vehicle_list():
         is_pass = len(vehicle_data_list) == scrape_num_results(test_search_results_url)
         print_test_result(is_pass, "test_get_vehicle_list()")
     return vehicle_data_list
-def test_add_vehicle_page_data(vehicle_data_list = None):
+def test_add_vehicle_page_data(vehicle_data_list = None) -> list[Vehicle_data]:
     """
     Check for all data added to Vehicle_data for sample of pages.
     """
@@ -66,6 +68,9 @@ def test_add_vehicle_page_data(vehicle_data_list = None):
         print_test_result(is_pass, "test_add_vehicle_page_data()")
     return vehicle_data_list_sample
 def test_save_data(vehicle_data_list = None):
+    """
+    Check save data file structure matches with scraped data.
+    """
     with Timer():
         if vehicle_data_list == None:
             test_search_results_url = "https://www.autotrader.co.uk/car-search?postcode=ba229sz&make=Lotus&model=Exige&include-delivery-option=on&advertising-location=at_cars&page=1"

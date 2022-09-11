@@ -67,7 +67,7 @@ class Vehicle_data:
                 self.__data[key] = value
             else:
                 raise KeyError("Invalid key in vehicle data entry")
-    def get_data(self):
+    def get_data(self) -> dict:
         """
         Returns Vehicle_data in dictionary format.
         Returns:
@@ -78,13 +78,13 @@ class Vehicle_data:
             "uuid" : self.__UUID,
             "data" : self.__data
         }
-    def get_url(self):
+    def get_url(self) -> str:
         """
         Returns:
             str: URL for Vehicle_data
         """
         return self.__data["href"]
-    def get_id(self):
+    def get_id(self) -> str:
         """
         Returns:
             str: Autotrader unique ID for Vehicle_data
