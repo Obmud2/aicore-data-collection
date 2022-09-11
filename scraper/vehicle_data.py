@@ -7,9 +7,9 @@ class Vehicle_data:
     """
     Template class for storing vehicle data for each vehicle.
     """
-    def __init__(self, vehicle_id):
+    def __init__(self, vehicle_id, uuid=None):
         self.__vehicle_id = vehicle_id
-        self.__UUID = str(uuid4())
+        self.__UUID = str(uuid4()) if not uuid else uuid
         self.__data = {
             "href" : None,
             "title" : None,
