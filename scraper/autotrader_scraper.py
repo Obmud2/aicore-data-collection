@@ -49,7 +49,7 @@ class Autotrader_scraper:
         except:
             print(f"Error accepting cookies")  
     
-    def __parse_vehicle_list(self) -> list:
+    def __parse_vehicle_list(self) -> list[Vehicle_data]:
         """
         Parse all useful data from search results list, including URL, titles, price and location. 
         Requires driver to be opened on search page URL.
@@ -159,7 +159,7 @@ class Autotrader_scraper:
         __select_model(model_type)
         __click_search()
         if self.verbose: print(f"Searching for {make_type} {model_type}")
-    def get_vehicle_list(self, max_pages=0) -> list:
+    def get_vehicle_list(self, max_pages=0) -> list[Vehicle_data]:
         """
         Navigates through all search pages to create vehicle list of top level data, up to a max_page limit.
         By default all pages will be scraped.
@@ -185,7 +185,7 @@ class Autotrader_scraper:
             vehicle_list += self.__parse_vehicle_list()
 
         return vehicle_list   
-    def add_vehicle_page_data(self, vehicle_list) -> list:
+    def add_vehicle_page_data(self, vehicle_list) -> list[Vehicle_data]:
         """
         Navigates to vehicle page and adds additional data not available on the search results pages.
 
