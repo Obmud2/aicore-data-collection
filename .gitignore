@@ -1,1 +1,7 @@
 raw_data
+.vscode
+.gitignore
+__pycache__
+scraper/__pycache__
+test/raw_data
+test/__pycache__
