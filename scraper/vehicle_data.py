@@ -97,3 +97,17 @@ class Vehicle_data:
         """
         self.__save_JSON(path)
         self.__download_images(path)
+
+    @staticmethod
+    def import_vehicle_data_list(path) -> list:
+        """
+        Reads a JSON file containing a list of Vehicle_data objects and outputs list
+        """
+        with open(path, 'r') as of:
+            vehicle_data_list_from_json = json.load(of)
+        vehicle_data_list = []
+        for vehicle in vehicle_data_list_from_json:
+            vehicle_data = Vehicle_data(vehicle['id'], vehicle['uuid'])
+            vehicle_data.add_data(**vehicle['data'])
+            vehicle_data_list.append(vehicle_data)
+        return vehicle_data_list
