@@ -24,23 +24,25 @@ Technologies used:
 - pandas (for easy visualisation of data whilst testing code)
 
 ## Milestone 3: Documentation and Testing
-Test cases are added to the scraper to check the public methods in the scraper class. Testing can be run according to the testing module.
-`python -m test.test_autotrader_scraper`
+Test cases are added to the scraper to check the public methods in the scraper and vehicle data classes. Testing can be run using unittest:
+`python -m unittest`
 
 Tests are run outside of the main file structure, and raw data is downloaded in the testing area. The testing is designed to check at a functional level:
 - Successful initialisation of browser driver
 - Successful navigation to search results and item pages
 - Successful data scrape of results page and item pages
 - Completeness of the scraper output
-- Data output file structure according to scraper outpu
+- Data output file structure according to scraper outputs
 - Runtimes of the modules
 
 Several issues were identified and resolved during testing, including:
 - Inefficient detection of ads listing, solved by changing the scraping terms to more specific
 - Scraper did not scrape all pages, solved by altering structure of storing scraped data
 - Readability of the code was improved with docstrings and variable names
+- Testing file dependencies were identified and removed.
 
 Technologies used:
 - Beautiful soup (faster implementation than selenium to support faster testing)
 - Regex (text matching of test cases)
 - os (file navigation in python)
+- unittest (python testing framework)
