@@ -2,6 +2,7 @@ from uuid import uuid4
 import json
 import os
 import urllib.request
+import pandas as pd
 
 class Vehicle_data:
     """
@@ -67,17 +68,21 @@ class Vehicle_data:
                 self.__data[key] = value
             else:
                 raise KeyError("Invalid key in vehicle data entry")
-    def get_data(self) -> dict:
+    def get_data(self, flattened=False) -> dict:
         """
         Returns Vehicle_data in dictionary format.
         Returns:
             dict: Vehicle_data in {id:, uuid:, data:{}} format.
         """
-        return {
+        data_dict = {
             "id" : self.__vehicle_id,
-            "uuid" : self.__UUID,
-            "data" : self.__data
+            "uuid" : self.__UUID
         }
+        if flattened:
+            data_dict.update(self.__data)
+        else:
+            data_dict['data'] = self.__data
+        return data_dict
     def get_url(self) -> str:
         """
         Returns:
@@ -111,3 +116,18 @@ class Vehicle_data:
             vehicle_data.add_data(**vehicle['data'])
             vehicle_data_list.append(vehicle_data)
         return vehicle_data_list
+
+    @staticmethod
+    def get_pandas_vehicle_data_list(vehicle_data_list) -> pd.DataFrame:
+        """
+        Returns list of Vehicle_data objects as pandas df.
+        Args:
+            vehicle_data_list (list[Vehicle_data]): List of Vehicle_data objects
+        Returns:
+            (Dataframe): Vehicle data
+        """
+        data = []
+        for vehicle in vehicle_data_list:
+            vehicle_data = vehicle.get_data(flattened=True)
+            data.append(vehicle_data)
+        return pd.DataFrame(data)
