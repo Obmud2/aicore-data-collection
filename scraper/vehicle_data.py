@@ -1,8 +1,8 @@
-from uuid import uuid4
 import json
 import os
 import urllib.request
 import pandas as pd
+from uuid import uuid4
 
 class Vehicle_data:
     """
@@ -22,11 +22,13 @@ class Vehicle_data:
             "img" : []
         }
 
-    def __download_images(self, path):
+    def __download_images(self, path) -> None:
         """
         Downloads image data from the given img src addresses stored within Vehicle_data.
         File are output in the following location:
             path/vehicle_id/images/vehicle_id_index.jpg
+        Args:
+            path (str): Path for saving image data
         """
         if not os.path.exists(f"{path}/{self.__vehicle_id}/images"):
             os.makedirs(f"{path}/{self.__vehicle_id}/images")
@@ -35,10 +37,12 @@ class Vehicle_data:
             img_path = f"{path}/{self.__vehicle_id}/images/{self.__vehicle_id}_{img_index}.jpg"
             urllib.request.urlretrieve(img_url, img_path)
             img_index += 1
-    def __save_JSON(self, path):
+    def __save_JSON(self, path) -> None:
         """
         Saves Vehicle_data to JSON format in the following location:
             path/vehicle_id/data.json
+        Args:
+            Path for saved JSON data
         """
         if not os.path.exists(f"{path}/{self.__vehicle_id}"):
             os.makedirs(f"{path}/{self.__vehicle_id}")
@@ -49,7 +53,7 @@ class Vehicle_data:
         with open(f"{path}/{self.__vehicle_id}/data.json", 'w') as of:
             of.write(json_object)
 
-    def add_data(self, **kwargs):
+    def add_data(self, **kwargs) -> None:
         """
         Adds data to the existing Vehicle_data object.
         Args:
@@ -70,9 +74,10 @@ class Vehicle_data:
                 raise KeyError("Invalid key in vehicle data entry")
     def get_data(self, flattened=False) -> dict:
         """
-        Returns Vehicle_data in dictionary format.
+        Args:
+            flattened (bool): Option to select dict output format
         Returns:
-            dict: Vehicle_data in {id:, uuid:, data:{}} format.
+            dict: Vehicle_data in {id:, uuid:, data:{}} (flattened = False) or {id:, uuid:, data1:, data2:, ../} (flattened = True) formats.
         """
         data_dict = {
             "id" : self.__vehicle_id,
@@ -95,10 +100,12 @@ class Vehicle_data:
             str: Autotrader unique ID for Vehicle_data
         """
         return self.__vehicle_id
-    def save_data(self, path="raw_data"):
+    def save_data(self, path="raw_data") -> None:
         """
         Downloads images and saves JSON data for Vehicle_data in file structure:
             path/vehicle_id/
+        Args:
+            path (str): Path to save data. Default = 'raw_data'
         """
         self.__save_JSON(path)
         self.__download_images(path)
@@ -106,7 +113,11 @@ class Vehicle_data:
     @staticmethod
     def import_vehicle_data_list(path) -> list:
         """
-        Reads a JSON file containing a list of Vehicle_data objects and outputs list
+        Reads a JSON file containing a list of Vehicle_data objects
+        Args:
+            path (str): Path of JSON file
+        Return:
+            (list[Vehicle_data]): List of Vehicle_data objects
         """
         with open(path, 'r') as of:
             vehicle_data_list_from_json = json.load(of)

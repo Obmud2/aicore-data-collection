@@ -54,7 +54,7 @@ class ScraperTestCase(unittest.TestCase):
                 self.assertTrue(data)
 
     def tearDown(self):
-        self.test_scraper.close_session()
+        self.test_scraper.driver.quit()
 
 
 if __name__ == "__main__":

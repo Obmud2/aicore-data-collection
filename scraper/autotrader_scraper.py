@@ -1,15 +1,12 @@
-from tabnanny import verbose
+import re
+import time
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
-from random import uniform
 from scraper.vehicle_data import Vehicle_data
-from scraper.timer import Timer
-import re
-import time
 
 class Autotrader_scraper:
     """
@@ -18,7 +15,6 @@ class Autotrader_scraper:
     def __init__(self, url="https://www.autotrader.co.uk", verbose=False):
         self.url = url
         self.verbose = verbose
-        self.delay = 10
         self.driver = webdriver.Safari()
         self.driver.implicitly_wait(0.5)
         self.driver.maximize_window()
@@ -26,33 +22,24 @@ class Autotrader_scraper:
         if self.verbose: print(f"Navigated to {self.url}")
         self.__accept_cookies()
 
-    def __sleep(self, duration = 1, distribution=0.2):
-        """
-        Sleep function used to add a random distribution to sleep commands, for reducing the liklihood of website detection.
-        Args:
-            duration (float): Nominal duration for sleep timer.
-            distribution (float): Bounds of uniform distribution +/- nominal duration.
-        """
-        time.sleep(duration + uniform(-distribution, distribution))
     def __accept_cookies(self):
         """
         Accept cookies on Autotrader homepage
         """
+        delay = 10 # Max delay to wait for webpage load
         try:
-            WebDriverWait(self.driver, self.delay).until(EC.presence_of_element_located((By.XPATH, '//*[@id="sp_message_iframe_687971"]')))
+            WebDriverWait(self.driver, delay).until(EC.presence_of_element_located((By.XPATH, '//*[@id="sp_message_iframe_687971"]')))
             self.driver.switch_to.frame("sp_message_iframe_687971")
-            accept_cookies_button = self.driver.find_element(by=By.XPATH, value="//button[@title='Accept All']")
-            accept_cookies_button.click()
+            self.driver.find_element(by=By.XPATH, value="//button[@title='Accept All']").click()
             self.driver.switch_to.default_content()
             if self.verbose: print("Cookies accepted")
-            self.__sleep(1)
+            time.sleep(1)
         except:
             print(f"Error accepting cookies")  
     
     def __parse_vehicle_list(self) -> list[Vehicle_data]:
         """
-        Parse all useful data from search results list, including URL, titles, price and location. 
-        Requires driver to be opened on search page URL.
+        Parse all useful data from search results list.
 
         Returns:
             list(Vehicle_data): Vehicle data from current search page.
@@ -61,7 +48,7 @@ class Autotrader_scraper:
         vehicles = self.driver.find_elements(by=By.XPATH, value="//li[@class='search-page__result']")
         for vehicle in vehicles:
             if vehicle.get_attribute('data-is-promoted-listing')=="true":
-                continue
+                continue # Ignore promoted listings to avoid double vehicle entries
             else:
                 vehicle_href = vehicle.find_element(by=By.XPATH, value="article/a").get_attribute('href')
                 vehicle_id = re.findall('[0-9]{15}', vehicle_href)[0]
@@ -80,18 +67,6 @@ class Autotrader_scraper:
                                 location = vehicle_location
                                 )
                 vehicle_list.append(vehicle_data)
-
-                # vehicle_list.append({
-                #     "id"   : vehicle_id,
-                #     "uuid" : str(uuid4()),
-                #     "data" : {
-                #         "href"     : vehicle_href,
-                #         "title"    : vehicle_title, 
-                #         "subtitle" : vehicle_subtitle,
-                #         "price"    : vehicle_price,
-                #         "location" : vehicle_location
-                #         }
-                #     })
         return vehicle_list
     def __parse_vehicle_page(self, vehicle_data) -> Vehicle_data:
         """
@@ -102,7 +77,7 @@ class Autotrader_scraper:
             Vehicle_data: Vehicle_data type including additional vehicle data scraped from vehicle page.
         """
         self.driver.get(vehicle_data.get_url())
-        self.__sleep(0.5, 0)
+        time.sleep(0.5)
 
         img_track = self.driver.find_element(by=By.XPATH, value="//div[@class='slick-track']")
         vehicle_img_list = []
@@ -111,11 +86,15 @@ class Autotrader_scraper:
         vehicle_mileage = self.driver.find_element(by=By.XPATH, value="//span[@data-gui='mileage']").text.strip()
         vehicle_mileage = int(re.sub("[^0-9]", "", vehicle_mileage))
 
-        desc_button = self.driver.find_element(by=By.XPATH, value="//button[@class='sc-hQYpqk sc-feWZte sc-iyHPJt cDuRCe eFGeSa gexRyG atc-type-picanto atc-type-picanto--medium']")
-        desc_button.click()
-        vehicle_desc = self.driver.find_element(by=By.XPATH, value="//p[@class='sc-ffgBur byDqpY atc-type-picanto']").text.strip()
-        desc_exit_button = self.driver.find_element(by=By.XPATH, value="//button[@aria-label='Close']")
-        desc_exit_button.click()
+        try:
+            desc_button = self.driver.find_element(by=By.XPATH, value="//button[@class='sc-hQYpqk sc-eQxmTn sc-ePZAhl cDuRCe kymA-DW kjRCRW atc-type-picanto atc-type-picanto--medium']")
+            desc_button.click()
+            vehicle_desc = self.driver.find_element(by=By.XPATH, value="//p[@class='sc-lcvaEy hePUbe atc-type-picanto']").text.strip()
+            desc_exit_button = self.driver.find_element(by=By.XPATH, value="//button[@aria-label='Close']")
+            desc_exit_button.click()
+        except:
+            # Use summary description if no 'Read more' button is present
+            vehicle_desc = self.driver.find_element(by=By.XPATH, value="//p[@class='sc-iNhCjk jaeYBi atds-type-picanto']").text.strip()
 
         vehicle_data.add_data(
             mileage = vehicle_mileage,
@@ -137,22 +116,23 @@ class Autotrader_scraper:
             postcode_input = self.driver.find_element(by=By.XPATH, value="//input[@id='postcode']")
             postcode_input.click()
             postcode_input.send_keys(postcode)
-            self.__sleep(1)
+            time.sleep(1)
         def __select_make(make):
+            delay = 10 # Max delay to wait for model list to appear
             make_selection = Select(self.driver.find_element(by=By.XPATH, value="//select[@id='make']"))
             make_selection.select_by_value(make_type)
-            WebDriverWait(self.driver, self.delay).until_not(EC.element_attribute_to_include((By.XPATH, "//select[@id='model']"), "disabled"))
-            self.__sleep(0.2,0)
+            WebDriverWait(self.driver, delay).until_not(EC.element_attribute_to_include((By.XPATH, "//select[@id='model']"), "disabled"))
+            time.sleep(0.2)
         def __select_model(model):
             model_selection = Select(self.driver.find_element(by=By.XPATH, value="//select[@id='model']"))
             model_selection.select_by_value(model_type)
-            self.__sleep(1)
+            time.sleep(1)
         def __click_search():
             search_button = self.driver.find_element(by=By.XPATH, value="//button[@data-gui='search-cars-button']")
             search_button.click()
-            self.__sleep(1)
-            search_button.click() # Second click necessary to accound for page scrolling and updating webpage.
-            self.__sleep(1)
+            time.sleep(1)
+            search_button.click() # Second click necessary to wait for page scrolling and page load.
+            time.sleep(1)
 
         __add_postcode(postcode)
         __select_make(make_type)
@@ -181,7 +161,7 @@ class Autotrader_scraper:
             if self.verbose: print(f"Searching page {page} of {pages}")
             if page != 1:
                 self.driver.get(f"{search_url}{page}")
-            self.__sleep(1)
+            time.sleep(1)
             vehicle_list += self.__parse_vehicle_list()
 
         return vehicle_list   
@@ -198,17 +178,12 @@ class Autotrader_scraper:
             vehicle_list[vehicle_index] = self.__parse_vehicle_page(vehicle_list[vehicle_index])
         return vehicle_list
 
-    def close_session(self):
-        """
-        Closes the browser session.
-        """
-        self.driver.close()
-
 if __name__ == "__main__":
-    scraper = Autotrader_scraper()
+    scraper = Autotrader_scraper(verbose=True)
     scraper.search_vehicle_type("Lotus", "Elise")
     vehicle_data_list = scraper.get_vehicle_list(max_pages = 1)
     vehicle_data_list = scraper.add_vehicle_page_data(vehicle_data_list)
-    scraper.close_session()
+    scraper.driver.quit()
+
     for vehicle_data in vehicle_data_list:
         vehicle_data.save_data()
