@@ -1,7 +1,6 @@
 import unittest
-import json
-from shutil import rmtree
 import os
+from shutil import rmtree
 from scraper.vehicle_data import Vehicle_data
 
 
