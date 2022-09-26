@@ -52,7 +52,7 @@ TODO:
 - Support dynamic class ids from autotrader html
 - Add handling of deleted img files
 
-## Milestone 4:
+## Milestone 4: Cloud Storage
 
 Connections to AWS cloud storage are added to scalably store the data from the web scraper. Connections to the AWS webserver are handled using the AWS_handler class.
 
