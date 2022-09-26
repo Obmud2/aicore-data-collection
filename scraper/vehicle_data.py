@@ -9,13 +9,12 @@ class Vehicle_data:
     """
     Template class for storing vehicle data for each vehicle.
     """
-    def __init__(self, vehicle_id, uuid=None, verbose=False):
+    def __init__(self, vehicle_id, uuid=None):
         self.__vehicle_id = vehicle_id
         self.__UUID = str(uuid4()) if not uuid else uuid
         self.__date_scraped = datetime.datetime.now()
         self.__last_updated = self.__date_scraped
         self.__date_removed = None
-        self.__verbose = verbose
         self.__data = {
             "href" : None,
             "title" : None,
@@ -43,7 +42,7 @@ class Vehicle_data:
             urllib.request.urlretrieve(img_url, img_path)
             img_index += 1
     
-    def __save_JSON(self, path) -> None:
+    def __save_JSON(self, path, verbose=False) -> None:
         """
         Saves Vehicle_data to JSON format in the following location:
             path/vehicle_id/data.json
@@ -53,7 +52,7 @@ class Vehicle_data:
         if not os.path.exists(f"{path}/{self.__vehicle_id}"):
             os.makedirs(f"{path}/{self.__vehicle_id}")
         else:
-            if self.__verbose: print(f"Veh id {self.__vehicle_id} already exists!")
+            if verbose: print(f"Veh id {self.__vehicle_id} already exists!")
             
         json_object = json.dumps(self.get_data(), indent=4, default=str)
         with open(f"{path}/{self.__vehicle_id}/data.json", 'w') as of:
