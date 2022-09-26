@@ -40,6 +40,7 @@ Several issues were identified and resolved during testing, including:
 - Scraper did not scrape all pages, solved by altering structure of storing scraped data
 - Readability of the code was improved with docstrings and variable names
 - Testing file dependencies were identified and removed.
+- Handling of deleted webpages was added
 
 Technologies used:
 - Beautiful soup (faster implementation than selenium to support faster testing)
@@ -49,5 +50,17 @@ Technologies used:
 
 TODO:
 - Support dynamic class ids from autotrader html
+- Add handling of deleted img files
 
 ## Milestone 4:
+
+Connections to AWS cloud storage are added to scalably store the data from the web scraper. Connections to the AWS webserver are handled using the AWS_handler class.
+
+Technologies used:
+- AWS RDS (using sqlalchemy and psycopg2)
+- AWS S3 (using boto3)
+- Numpy, Pandas, SQL
+
+TODO:
+- Add test cases for AWS uploads
+- Add checking for duplicate data uploads
