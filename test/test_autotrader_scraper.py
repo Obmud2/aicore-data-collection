@@ -45,13 +45,14 @@ class ScraperTestCase(unittest.TestCase):
         """
         self.vehicle_data_list = Vehicle_data.import_vehicle_data_list("test/test_files/initial_vehicle_data_list.json")
         self.test_scraper = Autotrader_scraper()
-        num_samples = min([3,len(self.vehicle_data_list)])
+        num_samples = min([8,len(self.vehicle_data_list)])
         self.vehicle_data_list = self.test_scraper.add_vehicle_page_data(self.vehicle_data_list[:num_samples])
         for vehicle in self.vehicle_data_list:
             vehicle_data = vehicle.get_data()
             self.assertTrue(vehicle_data["id"] and vehicle_data["uuid"])
-            for data in vehicle_data["data"].values():
-                self.assertTrue(data)
+            if not vehicle_data["date_removed"]:
+                for data in vehicle_data["data"].values():
+                    self.assertTrue(data)
 
     def tearDown(self):
         self.test_scraper.driver.quit()

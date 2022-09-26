@@ -24,4 +24,4 @@ if __name__ == "__main__":
     with open(f"test/test_files/full_vehicle_data_list.json", 'w') as of:
         of.write(json_object)
 
-    scraper.close_session()
+    scraper.driver.quit()

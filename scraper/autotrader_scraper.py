@@ -68,6 +68,7 @@ class Autotrader_scraper:
                                 )
                 vehicle_list.append(vehicle_data)
         return vehicle_list
+    
     def __parse_vehicle_page(self, vehicle_data) -> Vehicle_data:
         """
         Parses individual vehicle pages from a URL.
@@ -76,8 +77,14 @@ class Autotrader_scraper:
         Returns:
             Vehicle_data: Vehicle_data type including additional vehicle data scraped from vehicle page.
         """
-        self.driver.get(vehicle_data.get_url())
+        url = vehicle_data.get_url()
+        self.driver.get(url)
         time.sleep(0.5)
+
+        # Sets vehicle data to removed if ad expired
+        if "expired-ad=true" in self.driver.current_url:
+            vehicle_data.set_date_removed()
+            return vehicle_data
 
         img_track = self.driver.find_element(by=By.XPATH, value="//div[@class='slick-track']")
         vehicle_img_list = []

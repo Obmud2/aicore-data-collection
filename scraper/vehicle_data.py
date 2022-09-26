@@ -2,6 +2,7 @@ import json
 import os
 import urllib.request
 import pandas as pd
+import datetime
 from uuid import uuid4
 
 class Vehicle_data:
@@ -9,9 +10,11 @@ class Vehicle_data:
     Template class for storing vehicle data for each vehicle.
     """
     def __init__(self, vehicle_id, uuid=None):
-        self.vehicle_id = vehicle_id
         self.__vehicle_id = vehicle_id
         self.__UUID = str(uuid4()) if not uuid else uuid
+        self.__date_scraped = datetime.datetime.now()
+        self.__last_updated = self.__date_scraped
+        self.__date_removed = None
         self.__data = {
             "href" : None,
             "title" : None,
@@ -38,6 +41,7 @@ class Vehicle_data:
             img_path = f"{path}/{self.__vehicle_id}/images/{self.__vehicle_id}_{img_index}.jpg"
             urllib.request.urlretrieve(img_url, img_path)
             img_index += 1
+    
     def __save_JSON(self, path) -> None:
         """
         Saves Vehicle_data to JSON format in the following location:
@@ -50,7 +54,7 @@ class Vehicle_data:
         else:
             print(f"Veh id {self.__vehicle_id} already exists!")
             
-        json_object = json.dumps(self.get_data(), indent=4)
+        json_object = json.dumps(self.get_data(), indent=4, default=str)
         with open(f"{path}/{self.__vehicle_id}/data.json", 'w') as of:
             of.write(json_object)
 
@@ -73,6 +77,15 @@ class Vehicle_data:
                 self.__data[key] = value
             else:
                 raise KeyError("Invalid key in vehicle data entry")
+        
+        self.__last_updated = datetime.datetime.now()
+    
+    def set_date_removed(self) -> None:
+        """
+        Set __date_removed to current time
+        """
+        self.__date_removed = datetime.datetime.now()
+
     def get_data(self, flattened=False) -> dict:
         """
         Args:
@@ -82,25 +95,31 @@ class Vehicle_data:
         """
         data_dict = {
             "id" : self.__vehicle_id,
-            "uuid" : self.__UUID
+            "uuid" : self.__UUID,
+            "date_scraped" : self.__date_scraped,
+            "last_updated" : self.__last_updated,
+            "date_removed" : self.__date_removed
         }
         if flattened:
             data_dict.update(self.__data)
         else:
             data_dict['data'] = self.__data
         return data_dict
+    
     def get_url(self) -> str:
         """
         Returns:
             str: URL for Vehicle_data
         """
         return self.__data["href"]
+    
     def get_id(self) -> str:
         """
         Returns:
             str: Autotrader unique ID for Vehicle_data
         """
         return self.__vehicle_id
+    
     def save_data(self, path="raw_data") -> None:
         """
         Downloads images and saves JSON data for Vehicle_data in file structure:

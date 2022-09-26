@@ -47,4 +47,7 @@ Technologies used:
 - os (file navigation in python)
 - unittest (python testing framework)
 
+TODO:
+- Support dynamic class ids from autotrader html
+
 ## Milestone 4:
