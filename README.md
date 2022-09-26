@@ -63,4 +63,4 @@ Technologies used:
 
 TODO:
 - Add test cases for AWS uploads
-- Add checking for duplicate data uploads
+- Add checking for duplicate data uploads and scraping
