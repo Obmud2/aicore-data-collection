@@ -9,12 +9,13 @@ class Vehicle_data:
     """
     Template class for storing vehicle data for each vehicle.
     """
-    def __init__(self, vehicle_id, uuid=None):
+    def __init__(self, vehicle_id, uuid=None, verbose=False):
         self.__vehicle_id = vehicle_id
         self.__UUID = str(uuid4()) if not uuid else uuid
         self.__date_scraped = datetime.datetime.now()
         self.__last_updated = self.__date_scraped
         self.__date_removed = None
+        self.__verbose = verbose
         self.__data = {
             "href" : None,
             "title" : None,
@@ -52,7 +53,7 @@ class Vehicle_data:
         if not os.path.exists(f"{path}/{self.__vehicle_id}"):
             os.makedirs(f"{path}/{self.__vehicle_id}")
         else:
-            print(f"Veh id {self.__vehicle_id} already exists!")
+            if self.__verbose: print(f"Veh id {self.__vehicle_id} already exists!")
             
         json_object = json.dumps(self.get_data(), indent=4, default=str)
         with open(f"{path}/{self.__vehicle_id}/data.json", 'w') as of:
@@ -161,4 +162,6 @@ class Vehicle_data:
         for vehicle in vehicle_data_list:
             vehicle_data = vehicle.get_data(flattened=True)
             data.append(vehicle_data)
-        return pd.DataFrame(data)
+
+        df = pd.DataFrame(data).set_index('id')
+        return df
