@@ -4,11 +4,12 @@ import psycopg2
 import pandas as pd
 import aws_password
 from sqlalchemy import create_engine
+from tqdm import tqdm
 
 class AWS_handler:
 
     @staticmethod
-    def upload_to_s3(path='raw_data', bucket='autotraderscraper', search_name='', verbose=True) -> None:
+    def upload_to_s3(path='raw_data', bucket='autotraderscraper', search_name='', verbose=False) -> None:
         """
         Uploads all files in a path to S3 using boto3
         Args:
@@ -27,14 +28,13 @@ class AWS_handler:
         count = 1
         num_files = count_jpg_files(path)
         s3_client = boto3.client('s3')
+        file_paths = []
         for root, dirs, files in os.walk(path):
             for file in files:
                 if file == "data.json": continue # ignore json files
-                file_path = os.path.join(root, file)
-                file_save_path = os.path.join(search_name, root, file)
-                if verbose: print(f"Uploading file {count} of {num_files}: {file_save_path}")
-                response = s3_client.upload_file(file_path, bucket, file_save_path)
-                count += 1
+                file_paths.append(os.path.join(root, file))
+        for file in tqdm(file_paths, desc="Uploading images to S3..."):
+            response = s3_client.upload_file(file, bucket, os.path.join(search_name, file))
 
     @staticmethod
     def upload_to_rds(df, table) -> None:
@@ -55,7 +55,7 @@ class AWS_handler:
         DATABASE = 'autotrader_scraper'
 
         engine = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{ENDPOINT}:{PORT}/{DATABASE}")
-        df.to_sql(table, engine, if_exists='replace')
+        tqdm(df.to_sql(table, engine, if_exists='replace'), desc="Uploading data to RDS...")
 
     @staticmethod
     def list_s3(bucket='autotraderscraper'):

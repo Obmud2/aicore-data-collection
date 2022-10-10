@@ -131,6 +131,30 @@ class Vehicle_data:
         self.__download_images(path)
 
     @staticmethod
+    def select_storage_method() -> str:
+        """
+
+        Returns:
+            (str): "local", "rds" or "localrds"
+        """
+        while(True):
+            try:
+                storage_method = int(input("Select storage method:" + 
+                    "\n[1]\tLocal" +
+                    "\n[2]\tRDS" +
+                    "\n[3]\tLocal + RDS\n"))
+            except:
+                print("That's not an option! Try again.")
+            if storage_method == 1:
+                return "local"
+            elif storage_method == 2:
+                return "rds"
+            elif storage_method == 3:
+                return "localrds"
+            else:
+                print("Selection out of range. Try again.")
+
+    @staticmethod
     def parse_json_vehicle_data_list(path) -> list:
         """
         Reads a JSON file containing a list of Vehicle_data objects
