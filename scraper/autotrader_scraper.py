@@ -146,6 +146,7 @@ class Autotrader_scraper:
         __select_model(model_type)
         __click_search()
         if self.verbose: print(f"Searching for {make_type} {model_type}")
+    
     def get_vehicle_list(self, max_pages=0) -> list[Vehicle_data]:
         """
         Navigates through all search pages to create vehicle list of top level data, up to a max_page limit.
@@ -172,7 +173,8 @@ class Autotrader_scraper:
             vehicle_list += self.__parse_vehicle_list()
 
         return vehicle_list   
-    def add_vehicle_page_data(self, vehicle_list) -> list[Vehicle_data]:
+    
+    def get_vehicle_page_data(self, vehicle_list) -> list[Vehicle_data]:
         """
         Navigates to vehicle page and adds additional data not available on the search results pages.
 
@@ -189,7 +191,7 @@ if __name__ == "__main__":
     scraper = Autotrader_scraper(verbose=True)
     scraper.search_vehicle_type("Lotus", "Elise")
     vehicle_data_list = scraper.get_vehicle_list(max_pages = 1)
-    vehicle_data_list = scraper.add_vehicle_page_data(vehicle_data_list)
+    vehicle_data_list = scraper.get_vehicle_page_data(vehicle_data_list)
     scraper.driver.quit()
 
     for vehicle_data in vehicle_data_list:

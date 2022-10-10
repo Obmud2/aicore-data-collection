@@ -39,14 +39,14 @@ class ScraperTestCase(unittest.TestCase):
         self.vehicle_data_list = self.test_scraper.get_vehicle_list()
         self.assertTrue(len(self.vehicle_data_list) == scrape_num_results(test_search_results_url))
 
-    def test_add_vehicle_page_data(self):
+    def test_get_vehicle_page_data(self):
         """
         Check for all data added to Vehicle_data is non-empty for sample of pages.
         """
-        self.vehicle_data_list = Vehicle_data.import_vehicle_data_list("test/test_files/initial_vehicle_data_list.json")
+        self.vehicle_data_list = Vehicle_data.parse_json_vehicle_data_list("test/test_files/initial_vehicle_data_list.json")
         self.test_scraper = Autotrader_scraper()
         num_samples = min([8,len(self.vehicle_data_list)])
-        self.vehicle_data_list = self.test_scraper.add_vehicle_page_data(self.vehicle_data_list[:num_samples])
+        self.vehicle_data_list = self.test_scraper.get_vehicle_page_data(self.vehicle_data_list[:num_samples])
         for vehicle in self.vehicle_data_list:
             vehicle_data = vehicle.get_data()
             self.assertTrue(vehicle_data["id"] and vehicle_data["uuid"])

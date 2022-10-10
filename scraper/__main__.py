@@ -11,7 +11,7 @@ dir_name = f"{VEHICLE_MAKE.replace(' ','')}_{VEHICLE_MODEL.replace(' ','')}".low
 scraper = Autotrader_scraper()
 scraper.search_vehicle_type(VEHICLE_MAKE, VEHICLE_MODEL)
 vehicle_data_list = scraper.get_vehicle_list(max_pages = 1)
-vehicle_data_list = scraper.add_vehicle_page_data(vehicle_data_list)
+vehicle_data_list = scraper.get_vehicle_page_data(vehicle_data_list)
 scraper.driver.quit()
 for vehicle_data in vehicle_data_list:
     vehicle_data.save_data()
