@@ -4,6 +4,7 @@ import urllib.request
 import pandas as pd
 import datetime
 from uuid import uuid4
+from tqdm import tqdm
 
 class Vehicle_data:
     """
@@ -188,3 +189,13 @@ class Vehicle_data:
 
         df = pd.DataFrame(data).set_index('id')
         return df
+
+    @staticmethod
+    def save_list_to_local(vehicle_data_list, path="raw_data") -> None:
+        """
+        Args:
+            vehicle_data_list (list{Vehicle_data}): List from memory to store data
+            path (str): Path to save data
+        """
+        for vehicle in tqdm(vehicle_data_list, desc="Saving data to local..."):
+            vehicle.save_to_local(path)
