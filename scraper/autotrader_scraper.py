@@ -24,7 +24,7 @@ class Autotrader_scraper:
 
     def __accept_cookies(self):
         """
-        Accept cookies on Autotrader homepage
+        Accept cookies on Autotrader webpage
         """
         delay = 10 # Max delay to wait for webpage load
         try:
@@ -35,8 +35,14 @@ class Autotrader_scraper:
             if self.verbose: print("Cookies accepted")
             time.sleep(1)
         except:
-            print(f"Error accepting cookies")  
+            print(f"Error accepting cookies")
     
+    def __check_for_cookies_frame(self) -> bool:
+        if self.driver.find_elements(by=By.XPATH, value='//*[@id="sp_message_iframe_687971"]'):
+            return True
+        else:
+            return False
+
     def __parse_vehicle_list(self) -> list[Vehicle_data]:
         """
         Parse all useful data from search results list.
@@ -44,6 +50,10 @@ class Autotrader_scraper:
         Returns:
             list(Vehicle_data): Vehicle data from current search page.
         """
+        time.sleep(0.5)
+        if self.__check_for_cookies_frame():
+            self.__accept_cookies()
+        
         vehicle_list = []
         vehicles = self.driver.find_elements(by=By.XPATH, value="//li[@class='search-page__result']")
         for vehicle in vehicles:
@@ -80,6 +90,8 @@ class Autotrader_scraper:
         url = vehicle_data.get_url()
         self.driver.get(url)
         time.sleep(0.5)
+        if self.__check_for_cookies_frame():
+            self.__accept_cookies()
 
         # Sets vehicle data to removed if ad expired
         if "expired-ad=true" in self.driver.current_url:
@@ -188,11 +200,4 @@ class Autotrader_scraper:
         return vehicle_list
 
 if __name__ == "__main__":
-    scraper = Autotrader_scraper(verbose=True)
-    scraper.search_vehicle_type("Lotus", "Elise")
-    vehicle_data_list = scraper.get_vehicle_list(max_pages = 1)
-    vehicle_data_list = scraper.get_vehicle_page_data(vehicle_data_list)
-    scraper.driver.quit()
-
-    for vehicle_data in vehicle_data_list:
-        vehicle_data.save_data()
+    pass

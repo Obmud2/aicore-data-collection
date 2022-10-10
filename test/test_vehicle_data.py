@@ -6,7 +6,7 @@ from scraper.vehicle_data import Vehicle_data
 
 class VehicleDataTestCase(unittest.TestCase):
 
-    def test_save_data_local(self):
+    def test_save_to_local(self):
         """
         Check save data file structure matches with scraped data.
         """        
@@ -15,7 +15,7 @@ class VehicleDataTestCase(unittest.TestCase):
         rmtree(test_dir_path, ignore_errors=True)
         vehicle_data_ids = []
         for vehicle_data in vehicle_data_list:
-            vehicle_data.save_data_local(path=test_dir_path)
+            vehicle_data.save_to_local(path=test_dir_path)
             vehicle_data_ids.append(vehicle_data.get_id())
 
         # Check all folders are created

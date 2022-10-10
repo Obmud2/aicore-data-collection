@@ -120,7 +120,7 @@ class Vehicle_data:
         """
         return self.__vehicle_id
     
-    def save_data_local(self, path="raw_data") -> None:
+    def save_to_local(self, path="raw_data") -> None:
         """
         Downloads images and saves JSON data for Vehicle_data in file structure:
             path/vehicle_id/
