@@ -1,3 +1,4 @@
+from ctypes import BigEndianStructure
 import boto3
 import os
 import psycopg2
@@ -21,13 +22,16 @@ class AWS_handler:
         
         s3_client = boto3.client('s3')
         file_paths = []
+        s3_list = AWS_handler.list_s3(s3_client, bucket, prefix=search_name)
         for root, dirs, files in os.walk(path):
             for file in files:
                 file_ext = file.split('.')[-1]
                 if file_ext not in ['jpg', 'jpeg']: continue # ignore non-image files
                 file_paths.append(os.path.join(root, file))
         for file in tqdm(file_paths, desc="Uploading images to S3..."):
-            response = s3_client.upload_file(file, bucket, os.path.join(search_name, file))
+            key = os.path.join(search_name, file)
+            if key not in s3_list:
+                response = s3_client.upload_file(Filename=file, Bucket=bucket, Key=key)
 
     @staticmethod
     def upload_to_rds(vehicle_data_list, table) -> None:
@@ -53,16 +57,19 @@ class AWS_handler:
             df.to_sql(table, engine, if_exists='replace')
 
     @staticmethod
-    def list_s3(bucket='autotraderscraper'):
+    def list_s3(s3_client, bucket='autotraderscraper', prefix='')->list:
         """
         Lists all data stored in S3 bucket
         Args:
             bucket (str): S3 bucket to list data
+        Returns: 
         """
-        s3 = boto3.resource('s3')
-        my_bucket = s3.Bucket(bucket)
-        for file in my_bucket.objects.all():
-            print(file.key)
+        response = s3_client.list_objects_v2(Bucket=bucket, Prefix=prefix)
+        list_files = []
+        for file in response['Contents']:
+            print(file['Key'])
+            list_files.append(file['Key'])
+        return list_files
 
 if __name__ == "__main__":
     pass
