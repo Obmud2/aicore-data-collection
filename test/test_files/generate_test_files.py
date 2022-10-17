@@ -11,17 +11,19 @@ if __name__ == "__main__":
     for vehicle in vehicle_data_list:
         vehicle_data_list_json.append(vehicle.get_data())
 
-    json_object = json.dumps(vehicle_data_list_json, indent=4)
+    json_object = json.dumps(vehicle_data_list_json, indent=4, default=str)
     with open(f"test/test_files/initial_vehicle_data_list.json", 'w') as of:
         of.write(json_object)
 
-    vehicle_data_list = scraper.add_vehicle_page_data(vehicle_data_list[:3])
+    vehicle_data_list = scraper.get_vehicle_page_data(vehicle_data_list[:3])
     vehicle_data_list_json = []
     for vehicle in vehicle_data_list:
         vehicle_data_list_json.append(vehicle.get_data())
 
-    json_object = json.dumps(vehicle_data_list_json, indent=4)
+    json_object = json.dumps(vehicle_data_list_json, indent=4, default=str)
     with open(f"test/test_files/full_vehicle_data_list.json", 'w') as of:
         of.write(json_object)
+
+    Vehicle_data.save_list_to_local(vehicle_data_list, path='test/test_files/raw_data')
 
     scraper.driver.quit()

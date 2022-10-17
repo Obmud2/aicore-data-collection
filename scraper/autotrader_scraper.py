@@ -180,7 +180,8 @@ class Autotrader_scraper:
         for page in range(1, pages + 1):
             if self.verbose: print(f"Searching page {page} of {pages}")
             if page != 1:
-                self.driver.get(f"{search_url}{page}")
+                search_url_page = re.sub(r'page=1?', f'page={page}', search_url)
+                self.driver.get(search_url_page)
             time.sleep(1)
             vehicle_list += self.__parse_vehicle_list()
 

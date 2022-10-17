@@ -27,3 +27,5 @@ class VehicleDataTestCase(unittest.TestCase):
             self.assertTrue(vehicle_dir.sort() == ["data.json", "images"].sort(),'Saved data structure does not equal ["data.json", "images"]')           
             img_dir = os.listdir(f"{test_dir_path}/{vehicle_data.get_id()}/images")
             self.assertTrue(len(img_dir) == len(vehicle_data.get_data()['data']['img']), "Image files directory not complete")
+
+        rmtree(test_dir_path, ignore_errors=True)
