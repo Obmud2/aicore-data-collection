@@ -17,9 +17,9 @@ class AWSHandlerTestCase(unittest.TestCase):
 
     def test_upload_to_rds(self):
         vehicle_data_list = Vehicle_data.parse_json_vehicle_data_list("test/test_files/full_vehicle_data_list.json")
-        vehicle_data_list_pd = Vehicle_data.get_pandas_vehicle_data_list(vehicle_data_list)
-        self.aws.upload_to_rds(vehicle_data_list=vehicle_data_list, table='test')
-        vehicle_data_list_dl = self.aws.get_table_rds(table='test')
+        vehicle_data_list_pd = Vehicle_data.get_pandas_vehicle_data_list(vehicle_data_list).drop('last_updated', axis=1)
+        self.aws.upload_to_rds(vehicle_data_list, 'test')
+        vehicle_data_list_dl = self.aws.get_table_rds(table='test').drop('last_updated', axis=1)
         self.assertTrue(vehicle_data_list_pd.equals(vehicle_data_list_dl), 'Error uploading to RDS')
 
         

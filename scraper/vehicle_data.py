@@ -78,8 +78,6 @@ class Vehicle_data:
                 self.__data[key] = value
             else:
                 raise KeyError("Invalid key in vehicle data entry")
-        
-        self.__last_updated = datetime.datetime.now()
     
     def set_date_removed(self) -> None:
         """
@@ -106,6 +104,20 @@ class Vehicle_data:
         else:
             data_dict['data'] = self.__data
         return data_dict
+
+    def get_data_pd(self) -> pd.DataFrame:
+        """
+        Returns:
+            (DataFrame): Vehicle_data in single row pandas df
+        """
+        dt = self.get_data(flattened=True)
+        img_temp = f"{{{dt['img'][0]}"
+        for i in range(1,len(dt['img'])):
+            img_temp += f", {dt['img'][i]}"
+        img_temp += f"}}"
+        dt['img'] = img_temp
+        dt = {k:[v] for k,v in dt.items()}
+        return pd.DataFrame(dt).set_index('id')
     
     def get_url(self) -> str:
         """
@@ -169,6 +181,8 @@ class Vehicle_data:
         vehicle_data_list = []
         for vehicle in vehicle_data_list_from_json:
             vehicle_data = Vehicle_data(vehicle['id'], vehicle['uuid'])
+            vehicle_data.__date_scraped = datetime.datetime.strptime(vehicle['date_scraped'], '%Y-%m-%d %H:%M:%S.%f')
+            vehicle_data.__last_updated = datetime.datetime.strptime(vehicle['last_updated'], '%Y-%m-%d %H:%M:%S.%f')
             vehicle_data.add_data(**vehicle['data'])
             vehicle_data_list.append(vehicle_data)
         return vehicle_data_list
@@ -186,7 +200,6 @@ class Vehicle_data:
         for vehicle in vehicle_data_list:
             vehicle_data = vehicle.get_data(flattened=True)
             data.append(vehicle_data)
-
         df = pd.DataFrame(data).set_index('id')
         return df
 

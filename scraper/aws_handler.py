@@ -1,10 +1,10 @@
-from ctypes import BigEndianStructure
 import boto3
+import datetime
 import os
 import psycopg2
 import pandas as pd
 import aws_password
-from sqlalchemy import create_engine, inspect
+import sqlalchemy as db
 from tqdm import tqdm
 from scraper.vehicle_data import Vehicle_data
 
@@ -18,8 +18,64 @@ class AWS_handler:
         PASSWORD = aws_password.pw
         PORT = 5432
         DATABASE = 'autotrader_scraper'   
-        self.engine = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{ENDPOINT}:{PORT}/{DATABASE}")
+        self.engine = db.create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{ENDPOINT}:{PORT}/{DATABASE}")
         self.s3_client = boto3.client('s3')
+
+    def create_rds(self, table) -> None:
+        """
+        Creates SQL table for vehicle data info
+        Args:
+            table (string): Name of table (car make/model)
+        """
+        metadata = db.MetaData()
+        rds_table = db.Table(table, metadata, 
+                            db.Column('id', db.Integer, primary_key = True),
+                            db.Column('uuid', db.String),
+                            db.Column('date_added', db.DateTime),
+                            db.Column('last_updated', db.DateTime),
+                            db.Column('date_removed', db.DateTime),
+                            db.Column('href', db.String),
+                            db.Column('title', db.String),
+                            db.Column('subtitle', db.String),
+                            db.Column('price', db.Integer),
+                            db.Column('location', db.String),
+                            db.Column('mileage', db.Integer),
+                            db.Column('description', db.String),
+                            db.Column('img', db.String)
+                            ) 
+        metadata.create_all(self.engine)
+
+    def add_to_rds(self, vehicle_data, table) -> None:
+        """
+        Adds Vehicle_data object to remote SQL table. Compares row with existing entries, and uploads or updates the row.
+        Args:
+            vehicle_data (Vehicle_data): Vehicle data object describing the SQL row to upload
+            table (str): Name to SQL table to upload
+        """
+        veh_id = vehicle_data.get_data()['id']
+        remote_data =  self.engine.execute(f"SELECT * FROM {table} WHERE id = \'{veh_id}\'").fetchall()
+        if not remote_data: #if entry does not exist
+            values = [v for k,v in vehicle_data.get_data(flattened=True).items()]
+            values_txt = f"{values[0]}"
+            for i in range(1, len(values)):
+                values_txt += f", \'{values[i]}\'"
+            with self.engine.connect() as conn:
+                conn.execute(f"INSERT INTO {table} VALUES ({values_txt})")
+        elif len(remote_data) > 1:
+            print(remote_data)
+            raise Exception(f"Multiple matches found in remote database: {table}")
+        else: #compare data entries and update on rds
+            cols_to_ignore = ['date_scraped', 'last_updated', 'date_removed']
+            remote_data = pd.DataFrame(remote_data).set_index('id').drop(cols_to_ignore, axis=1)
+            vehicle_data = vehicle_data.get_data_pd().drop(cols_to_ignore, axis=1)
+            cols_to_update = list(vehicle_data.compare(remote_data, align_axis=0).columns)
+            if cols_to_update:
+                update_txt = ""
+                for col in cols_to_update:
+                    update_txt += f"{col} = \'{vehicle_data[col].loc[veh_id]}\', "
+                with self.engine.connect() as conn:
+                    conn.execute(f"UPDATE {table} SET {update_txt.strip().strip(',')} WHERE id=\'{veh_id}\'")
+                    conn.execute(f"UPDATE {table} SET last_updated=\'{datetime.datetime.now()}\' WHERE id=\'{veh_id}\'")
 
     def upload_to_rds(self, vehicle_data_list, table) -> None:
         """
@@ -31,8 +87,8 @@ class AWS_handler:
             (list): Query * from RDS database
         """
         df = Vehicle_data.get_pandas_vehicle_data_list(vehicle_data_list)
-        for i in tqdm(range(1), desc="Uploading data to RDS..."):
-            df.to_sql(table, self.engine, if_exists='replace')
+        for vehicle_data in tqdm(vehicle_data_list, desc="Uploading data to RDS..."):
+            self.add_to_rds(vehicle_data, table)
 
     def get_table_rds(self, table) -> pd.DataFrame:
         """
