@@ -106,14 +106,15 @@ class Autotrader_scraper:
         vehicle_mileage = int(re.sub("[^0-9]", "", vehicle_mileage))
 
         try:
-            desc_button = self.driver.find_element(by=By.XPATH, value="//button[@class='sc-hQYpqk sc-eQxmTn sc-ePZAhl cDuRCe kymA-DW kjRCRW atc-type-picanto atc-type-picanto--medium']")
+            desc_button = self.driver.find_element(by=By.XPATH, value="//button[@class='sc-dksuTV sc-cOohKt sc-lMZDC zPuL ieYCDx nRsKQ atc-type-picanto atc-type-picanto--medium']")
             desc_button.click()
-            vehicle_desc = self.driver.find_element(by=By.XPATH, value="//p[@class='sc-lcvaEy hePUbe atc-type-picanto']").text.strip()
+            vehicle_desc = self.driver.find_element(by=By.XPATH, value="//p[@class='sc-joaiRD gQkOux atc-type-picanto']").text.strip()
             desc_exit_button = self.driver.find_element(by=By.XPATH, value="//button[@aria-label='Close']")
             desc_exit_button.click()
         except:
             # Use summary description if no 'Read more' button is present
-            vehicle_desc = self.driver.find_element(by=By.XPATH, value="//p[@class='sc-iNhCjk jaeYBi atds-type-picanto']").text.strip()
+            print(self.driver.current_url)
+            vehicle_desc = self.driver.find_element(by=By.XPATH, value="//p[@class='sc-iLCGUA gVqxW atds-type-picanto']").text.strip()
 
         vehicle_data.add_data(
             mileage = vehicle_mileage,
