@@ -7,6 +7,7 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from tqdm import tqdm
 
 from scraper.vehicle_data import Vehicle_data
 
@@ -14,10 +15,11 @@ class Autotrader_scraper:
     """
     Container class for the autotrader scraper tool.
     """
-    def __init__(self, url="https://www.autotrader.co.uk", verbose=False):
+    def __init__(self, url="https://www.autotrader.co.uk", verbose=False, headless=True):
         chrome_options = Options()
-        chrome_options.add_argument("--headless")  
-        chrome_options.add_argument("window-size=1920,1080")
+        if headless:
+            chrome_options.add_argument("--headless")  
+            chrome_options.add_argument("window-size=1920,1080")
         self.url = url
         self.verbose = verbose
         self.driver = uc.Chrome(options=chrome_options)
@@ -130,7 +132,7 @@ class Autotrader_scraper:
 
         return vehicle_data
 
-    def search_vehicle_type(self, make_type="Lotus", model_type="Elise", postcode="BA229SZ"):
+    def __search_vehicle_type(self, make_type, model_type, postcode):
         """
         Searches for vehicle make and model from Autotrader homepage. Navigates driver to first search results page.
         Args:
@@ -147,12 +149,12 @@ class Autotrader_scraper:
             delay = 10 # Max delay to wait for model list to appear
             while (next((attr['name'] for attr in self.driver.find_element(By.XPATH, "//select[@id='model']").get_property('attributes') if attr['name']=='disabled'), False)):
                 make_selection = Select(self.driver.find_element(by=By.XPATH, value="//select[@id='make']"))
-                make_selection.select_by_value(make_type)
+                make_selection.select_by_value(make)
                 time.sleep(2)
             time.sleep(2)
         def __select_model(model):
             model_selection = Select(self.driver.find_element(by=By.XPATH, value="//select[@id='model']"))
-            model_selection.select_by_value(model_type)
+            model_selection.select_by_value(model)
             time.sleep(2)
         def __click_search():
             search_button = self.driver.find_element(by=By.XPATH, value="//button[@data-gui='search-cars-button']")
@@ -163,9 +165,8 @@ class Autotrader_scraper:
         __select_make(make_type)
         __select_model(model_type)
         __click_search()
-        if self.verbose: print(f"Searching for {make_type} {model_type}")
     
-    def get_vehicle_list(self, max_pages=0) -> list[Vehicle_data]:
+    def get_vehicle_list(self, make_type, model_type, postcode="FK78BH", max_pages=0) -> list[Vehicle_data]:
         """
         Navigates through all search pages to create vehicle list of top level data, up to a max_page limit.
         By default all pages will be scraped.
@@ -174,6 +175,9 @@ class Autotrader_scraper:
         Returns:
             list: Vehicle list in array of dictionaries.
         """
+        for i in tqdm(range(1), desc=f"Searching for {make_type} {model_type}...: "):
+            self.__search_vehicle_type(make_type, model_type, postcode)
+        
         search_url = self.driver.current_url[:-1]
         vehicle_list = []
         vehicle_id_list = []
@@ -184,8 +188,7 @@ class Autotrader_scraper:
         else:
             pages = max_pages
 
-        for page in range(1, pages + 1):
-            if self.verbose: print(f"Searching page {page} of {pages}")
+        for page in tqdm(range(1, pages + 1), desc="Scraping search results...: "):
             if page != 1:
                 search_url_page = re.sub(r'page=1?', f'page={page}', search_url)
                 self.driver.get(search_url_page)
@@ -203,7 +206,7 @@ class Autotrader_scraper:
         Returns:
             list: Updated vehicle list including new data from each vehicle page.
         """
-        for vehicle_index in range(len(vehicle_list)):
+        for vehicle_index in tqdm(range(len(vehicle_list)), desc="Parsing vehicle pages...: "):
             vehicle_list[vehicle_index] = self.__parse_vehicle_page(vehicle_list[vehicle_index])
         return vehicle_list
 

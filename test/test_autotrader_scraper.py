@@ -13,22 +13,21 @@ class ScraperTestCase(unittest.TestCase):
         self.test_make = "Lotus"
         self.test_model = "Exige"
     
-    def test_search_vehicle_type(self):
-        """
-        Check that search is completed and new url is reached including search terms
-        """
-        self.test_scraper = Autotrader_scraper()
-        init_url = self.test_scraper.driver.current_url[:-1]
-        self.test_scraper.search_vehicle_type(self.test_make, self.test_model)
-        new_url = self.test_scraper.driver.current_url[:-1]
-        self.assertTrue(init_url != new_url and self.test_make in new_url and self.test_model in new_url)
+    # def test_search_vehicle_type(self):
+    #     """
+    #     Check that search is completed and new url is reached including search terms
+    #     """
+    #     self.test_scraper = Autotrader_scraper()
+    #     init_url = self.test_scraper.driver.current_url[:-1]
+    #     self.test_scraper.search_vehicle_type(self.test_make, self.test_model)
+    #     new_url = self.test_scraper.driver.current_url[:-1]
+    #     self.assertTrue(init_url != new_url and self.test_make in new_url and self.test_model in new_url)
 
     def test_get_vehicle_list(self):
         """
         Check that number of listed vehicles matches number of results scraped.
         """
-        test_search_results_url = "https://www.autotrader.co.uk/car-search?postcode=ba229sz&make=Lotus&model=Exige&include-delivery-option=on&advertising-location=at_cars&page=1"
-        self.test_scraper = Autotrader_scraper(test_search_results_url)
+        self.test_scraper = Autotrader_scraper()
         
         def scrape_num_results(test_search_results_url):
             page = urllib.request.urlopen(test_search_results_url)
@@ -36,8 +35,8 @@ class ScraperTestCase(unittest.TestCase):
             num_results = soup.find('h1', class_='search-form__count js-results-count').get_text()
             return int(re.sub("[^0-9]",'',num_results))
         
-        self.vehicle_data_list = self.test_scraper.get_vehicle_list()
-        self.assertTrue(len(self.vehicle_data_list) == scrape_num_results(test_search_results_url))
+        vehicle_data_list = self.test_scraper.get_vehicle_list('Lotus', 'Elise')
+        self.assertTrue(len(vehicle_data_list) == scrape_num_results(self.test_scraper.driver.current_url))
 
     def test_get_vehicle_page_data(self):
         """
