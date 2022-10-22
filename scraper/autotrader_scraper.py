@@ -1,9 +1,11 @@
 import re
 import time
+import undetected_chromedriver as uc
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 
 from scraper.vehicle_data import Vehicle_data
@@ -13,9 +15,12 @@ class Autotrader_scraper:
     Container class for the autotrader scraper tool.
     """
     def __init__(self, url="https://www.autotrader.co.uk", verbose=False):
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")  
+        chrome_options.add_argument("window-size=1920,1080")
         self.url = url
         self.verbose = verbose
-        self.driver = webdriver.Safari()
+        self.driver = uc.Chrome(options=chrome_options)
         self.driver.implicitly_wait(0.5)
         self.driver.maximize_window()
         self.driver.get(self.url)
@@ -33,8 +38,9 @@ class Autotrader_scraper:
             self.driver.find_element(by=By.XPATH, value="//button[@title='Accept All']").click()
             self.driver.switch_to.default_content()
             if self.verbose: print("Cookies accepted")
-            time.sleep(1)
-        except:
+            time.sleep(2)
+        except Exception as e:
+            print(e)
             print(f"Error accepting cookies")
     
     def __check_for_cookies_frame(self) -> bool:
@@ -43,7 +49,7 @@ class Autotrader_scraper:
         else:
             return False
 
-    def __parse_vehicle_list(self) -> list[Vehicle_data]:
+    def __parse_vehicle_list(self, vehicle_id_list) -> list[Vehicle_data]:
         """
         Parse all useful data from search results list.
 
@@ -57,11 +63,12 @@ class Autotrader_scraper:
         vehicle_list = []
         vehicles = self.driver.find_elements(by=By.XPATH, value="//li[@class='search-page__result']")
         for vehicle in vehicles:
-            if vehicle.get_attribute('data-is-promoted-listing')=="true":
+            vehicle_href = vehicle.find_element(by=By.XPATH, value="article/a").get_attribute('href')
+            vehicle_id = re.findall('[0-9]{15}', vehicle_href)[0]
+            if vehicle_id in vehicle_id_list:
                 continue # Ignore promoted listings to avoid double vehicle entries
             else:
-                vehicle_href = vehicle.find_element(by=By.XPATH, value="article/a").get_attribute('href')
-                vehicle_id = re.findall('[0-9]{15}', vehicle_href)[0]
+                vehicle_id_list.append(vehicle_id)
                 vehicle_title = vehicle.find_element(by=By.CLASS_NAME, value="product-card-details__title").text.strip()
                 vehicle_subtitle = vehicle.find_element(by=By.CLASS_NAME, value="product-card-details__subtitle").text.strip()
                 vehicle_price = vehicle.find_element(by=By.CLASS_NAME, value="product-card-pricing__price").text.strip()
@@ -113,7 +120,6 @@ class Autotrader_scraper:
             desc_exit_button.click()
         except:
             # Use summary description if no 'Read more' button is present
-            print(self.driver.current_url)
             vehicle_desc = self.driver.find_element(by=By.XPATH, value="//p[@class='sc-iLCGUA gVqxW atds-type-picanto']").text.strip()
 
         vehicle_data.add_data(
@@ -136,23 +142,22 @@ class Autotrader_scraper:
             postcode_input = self.driver.find_element(by=By.XPATH, value="//input[@id='postcode']")
             postcode_input.click()
             postcode_input.send_keys(postcode)
-            time.sleep(1)
+            time.sleep(2)
         def __select_make(make):
             delay = 10 # Max delay to wait for model list to appear
-            make_selection = Select(self.driver.find_element(by=By.XPATH, value="//select[@id='make']"))
-            make_selection.select_by_value(make_type)
-            WebDriverWait(self.driver, delay).until_not(EC.element_attribute_to_include((By.XPATH, "//select[@id='model']"), "disabled"))
-            time.sleep(0.2)
+            while (next((attr['name'] for attr in self.driver.find_element(By.XPATH, "//select[@id='model']").get_property('attributes') if attr['name']=='disabled'), False)):
+                make_selection = Select(self.driver.find_element(by=By.XPATH, value="//select[@id='make']"))
+                make_selection.select_by_value(make_type)
+                time.sleep(2)
+            time.sleep(2)
         def __select_model(model):
             model_selection = Select(self.driver.find_element(by=By.XPATH, value="//select[@id='model']"))
             model_selection.select_by_value(model_type)
-            time.sleep(1)
+            time.sleep(2)
         def __click_search():
             search_button = self.driver.find_element(by=By.XPATH, value="//button[@data-gui='search-cars-button']")
             search_button.click()
-            time.sleep(1)
-            search_button.click() # Second click necessary to wait for page scrolling and page load.
-            time.sleep(1)
+            time.sleep(2)
 
         __add_postcode(postcode)
         __select_make(make_type)
@@ -171,6 +176,7 @@ class Autotrader_scraper:
         """
         search_url = self.driver.current_url[:-1]
         vehicle_list = []
+        vehicle_id_list = []
 
         if max_pages == 0:
             pages_text = self.driver.find_element(by=By.XPATH, value="//li[@class='paginationMini__count']").text
@@ -184,7 +190,7 @@ class Autotrader_scraper:
                 search_url_page = re.sub(r'page=1?', f'page={page}', search_url)
                 self.driver.get(search_url_page)
             time.sleep(1)
-            vehicle_list += self.__parse_vehicle_list()
+            vehicle_list += self.__parse_vehicle_list(vehicle_id_list)
 
         return vehicle_list   
     
