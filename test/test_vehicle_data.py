@@ -1,6 +1,7 @@
 import unittest
 import os
 from shutil import rmtree
+from scraper.aws_handler import AWS_handler
 from scraper.vehicle_data import Vehicle_data
 
 
@@ -29,3 +30,6 @@ class VehicleDataTestCase(unittest.TestCase):
             self.assertTrue(len(img_dir) == len(vehicle_data.get_data()['data']['img']), "Image files directory not complete")
 
         rmtree(test_dir_path, ignore_errors=True)
+
+    
+        

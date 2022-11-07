@@ -117,6 +117,7 @@ class Autotrader_scraper:
         try:
             desc_button = self.driver.find_element(by=By.XPATH, value="//button[@class='sc-dksuTV sc-cOohKt sc-lMZDC zPuL ieYCDx nRsKQ atc-type-picanto atc-type-picanto--medium']")
             desc_button.click()
+            time.sleep(1)
             vehicle_desc = self.driver.find_element(by=By.XPATH, value="//p[@class='sc-joaiRD gQkOux atc-type-picanto']").text.strip()
             desc_exit_button = self.driver.find_element(by=By.XPATH, value="//button[@aria-label='Close']")
             desc_exit_button.click()
@@ -206,7 +207,7 @@ class Autotrader_scraper:
         Returns:
             list: Updated vehicle list including new data from each vehicle page.
         """
-        for vehicle_index in tqdm(range(len(vehicle_list)), desc="Parsing vehicle pages...: "):
+        for vehicle_index in tqdm(range(len(vehicle_list)), desc="Scraping vehicle pages...: "):
             vehicle_list[vehicle_index] = self.__parse_vehicle_page(vehicle_list[vehicle_index])
         return vehicle_list
 

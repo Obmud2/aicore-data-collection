@@ -14,7 +14,7 @@ class Vehicle_data:
         self.__vehicle_id = vehicle_id
         self.__UUID = str(uuid4()) if not uuid else uuid
         self.__date_scraped = datetime.datetime.now()
-        self.__last_updated = self.__date_scraped
+        self.__last_updated = None
         self.__date_removed = None
         self.__data = {
             "href" : None,
@@ -117,7 +117,7 @@ class Vehicle_data:
         img_temp += f"}}"
         dt['img'] = img_temp
         dt = {k:[v] for k,v in dt.items()}
-        return pd.DataFrame(dt).set_index('id')
+        return pd.DataFrame(dt)
     
     def get_url(self) -> str:
         """
@@ -182,13 +182,14 @@ class Vehicle_data:
         for vehicle in vehicle_data_list_from_json:
             vehicle_data = Vehicle_data(vehicle['id'], vehicle['uuid'])
             vehicle_data.__date_scraped = datetime.datetime.strptime(vehicle['date_scraped'], '%Y-%m-%d %H:%M:%S.%f')
-            vehicle_data.__last_updated = datetime.datetime.strptime(vehicle['last_updated'], '%Y-%m-%d %H:%M:%S.%f')
+            try: vehicle_data.__last_updated = datetime.datetime.strptime(vehicle['last_updated'], '%Y-%m-%d %H:%M:%S.%f')
+            except: pass
             vehicle_data.add_data(**vehicle['data'])
             vehicle_data_list.append(vehicle_data)
         return vehicle_data_list
 
     @staticmethod
-    def get_pandas_vehicle_data_list(vehicle_data_list) -> pd.DataFrame:
+    def get_pandas_vehicle_data_list(vehicle_data_list=None) -> pd.DataFrame:
         """
         Returns list of Vehicle_data objects as pandas df.
         Args:
@@ -200,7 +201,7 @@ class Vehicle_data:
         for vehicle in vehicle_data_list:
             vehicle_data = vehicle.get_data(flattened=True)
             data.append(vehicle_data)
-        df = pd.DataFrame(data).set_index('id')
+        df = pd.DataFrame(data)
         return df
 
     @staticmethod
