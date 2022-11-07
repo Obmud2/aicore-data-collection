@@ -54,13 +54,9 @@ TODO:
 
 ## Milestone 4: Cloud Storage
 
-Connections to AWS cloud storage are added to scalably store the data from the web scraper. Connections to the AWS webserver are handled using the AWS_handler class.
+Connections to AWS cloud storage are added to scalably store the data from the web scraper. Connections to the AWS webserver are handled using the AWS_handler class. Data is uploaded to RDS using batch processing.
 
 Technologies used:
 - AWS RDS (using sqlalchemy and psycopg2)
 - AWS S3 (using boto3)
-- Numpy, Pandas, SQL
-
-TODO:
-- Add test cases for AWS uploads
-- Add checking for duplicate data uploads and scraping
+- Numpy, Pandas, SQL, SQLAlchemy, psycopg2, tqdm
