@@ -11,7 +11,7 @@ class AWSHandlerTestCase(unittest.TestCase):
     
     def test_upload_to_s3(self):
         self.aws.clear_s3(prefix='test')
-        self.aws.upload_to_s3(path='test/test_files/raw_data', search_name='test')
+        self.aws.upload_to_s3(path='test/test_files/raw_data', folder_name='test')
         self.assertTrue(len(self.aws.list_s3(prefix='test')), 'Error uploading to S3')
 
     def test_upload_to_rds(self):
