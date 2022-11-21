@@ -17,7 +17,7 @@ class ScraperTestCase(unittest.TestCase):
         """
         Check that number of listed vehicles matches number of results scraped.
         """
-        self.test_scraper = Autotrader_scraper()
+        self.test_scraper = Autotrader_scraper(headless=False)
         
         def scrape_num_results(test_search_results_url):
             page = urllib.request.urlopen(test_search_results_url)
@@ -33,7 +33,7 @@ class ScraperTestCase(unittest.TestCase):
         Check for all data added to Vehicle_data is non-empty for sample of pages.
         """
         self.vehicle_data_list = Vehicle_data.parse_json_vehicle_data_list("test/test_files/initial_vehicle_data_list.json")
-        self.test_scraper = Autotrader_scraper()
+        self.test_scraper = Autotrader_scraper(headless=False)
         num_samples = min([100,len(self.vehicle_data_list)])
         self.vehicle_data_list = self.test_scraper.get_vehicle_page_data(self.vehicle_data_list[:num_samples])
         for vehicle in self.vehicle_data_list:

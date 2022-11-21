@@ -1,14 +1,14 @@
 # Main file for autotrader scraper project.
 
-from autotrader_scraper import Autotrader_scraper
-from vehicle_data import Vehicle_data
-from aws_handler import AWS_handler
+from scraper.autotrader_scraper import Autotrader_scraper
+from scraper.vehicle_data import Vehicle_data
+from scraper.aws_handler import AWS_handler
 
 VEHICLE_MAKE = "Lotus"
 VEHICLE_MODEL = 'Elise'
 dir_name = f"{VEHICLE_MAKE.replace(' ','')}_{VEHICLE_MODEL.replace(' ','')}".lower()
 
-scraper = Autotrader_scraper(headless=True)
+scraper = Autotrader_scraper(headless=False)
 aws = AWS_handler()
 vehicle_data_list = scraper.get_vehicle_list(VEHICLE_MAKE, VEHICLE_MODEL, max_pages=0)
 vehicle_data_list = scraper.get_vehicle_page_data(vehicle_data_list)
