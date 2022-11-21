@@ -1,6 +1,5 @@
 import unittest
-import os
-import pandas as pd
+
 from scraper.vehicle_data import Vehicle_data
 from scraper.aws_handler import AWS_handler
 
@@ -48,4 +47,5 @@ class AWSHandlerTestCase(unittest.TestCase):
         self.aws.engine.execute('DROP TABLE test')
         self.assertTrue([vdl0_id, vdl1_id, vdl2_id, vdl3_id] in vdl_remote['id'].values, "RDS database does not match")
 
-        
+if __name__ == "__main__":
+    unittest.main(argv=[''], verbosity=2, exit=False)

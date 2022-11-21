@@ -1,9 +1,9 @@
 import unittest
 import os
 from shutil import rmtree
+
 from scraper.aws_handler import AWS_handler
 from scraper.vehicle_data import Vehicle_data
-
 
 class VehicleDataTestCase(unittest.TestCase):
 
@@ -31,5 +31,5 @@ class VehicleDataTestCase(unittest.TestCase):
 
         rmtree(test_dir_path, ignore_errors=True)
 
-    
-        
+if __name__ == "__main__":
+    unittest.main(argv=[''], verbosity=2, exit=False)

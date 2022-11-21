@@ -22,7 +22,7 @@ class Autotrader_scraper:
             chrome_options.add_argument("window-size=1920,1080")
         self.url = url
         self.verbose = verbose
-        self.driver = uc.Chrome(options=chrome_options)
+        self.driver = uc.Chrome(options=chrome_options, use_subprocess=True)
         self.driver.implicitly_wait(0.5)
         self.driver.maximize_window()
         self.driver.get(self.url)
@@ -46,7 +46,7 @@ class Autotrader_scraper:
             print(f"Error accepting cookies")
     
     def __check_for_cookies_frame(self) -> bool:
-        if self.driver.find_elements(by=By.XPATH, value='//*[@id="sp_message_iframe_687971"]'):
+        if self.driver.find_elements(by=By.XPATH, value='//iframe[@id="sp_message_iframe_687971"]'):
             return True
         else:
             return False
@@ -58,7 +58,7 @@ class Autotrader_scraper:
         Returns:
             list(Vehicle_data): Vehicle data from current search page.
         """
-        time.sleep(0.5)
+        time.sleep(1)
         if self.__check_for_cookies_frame():
             self.__accept_cookies()
         

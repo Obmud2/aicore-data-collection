@@ -1,0 +1,10 @@
+regex
+tqdm
+selenium
+undetected_chromedriver
+boto3
+psycopg2
+pandas
+sqlalchemy
+uuid
+bs4

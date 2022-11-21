@@ -5,4 +5,6 @@ __pycache__
 scraper/__pycache__
 test/raw_data
 test/__pycache__
-aws_password.py
+scraper/aws_password.py
+build
+scraper.egg-info

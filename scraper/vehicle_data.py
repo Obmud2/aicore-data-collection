@@ -4,6 +4,7 @@ import urllib.request
 import pandas as pd
 import datetime
 from uuid import uuid4
+from shutil import rmtree
 from tqdm import tqdm
 
 class Vehicle_data:
@@ -213,3 +214,7 @@ class Vehicle_data:
         """
         for vehicle in tqdm(vehicle_data_list, desc="Saving data to local..."):
             vehicle.save_to_local(path)
+
+    @staticmethod
+    def rm_local_dir(dir='raw_data') -> None:
+        rmtree(dir, ignore_errors=True)

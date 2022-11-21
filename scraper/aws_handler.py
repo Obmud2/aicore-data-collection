@@ -1,14 +1,14 @@
 from sqlite3 import Timestamp
-from turtle import update
 from types import NoneType
 import boto3
 import datetime
 import os
 import psycopg2
 import pandas as pd
-import aws_password
 import sqlalchemy as db
 from tqdm import tqdm
+
+from scraper.aws_password import pw
 from scraper.vehicle_data import Vehicle_data
 
 class AWS_handler:
@@ -18,7 +18,7 @@ class AWS_handler:
         DBAPI = 'psycopg2'
         ENDPOINT = 'aicoredb.ckadzi3b9dep.us-east-1.rds.amazonaws.com'
         USER = 'postgres'
-        PASSWORD = aws_password.pw
+        PASSWORD = pw
         PORT = 5432
         DATABASE = 'autotrader_scraper'   
         self.engine = db.create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{ENDPOINT}:{PORT}/{DATABASE}")
@@ -179,7 +179,7 @@ class AWS_handler:
                                 how='outer', on='id', indicator=True)
 
         # Items removed since last search
-        rm_ids = combined_vdl.query('_merge == "right_only" & date_removed_y != None')
+        rm_ids = combined_vdl.query('_merge == "right_only" and date_removed_y.isnull()', engine='python')
         if not rm_ids.empty:
             rm_vdl = vehicle_data_list_remote_pd[vehicle_data_list_remote_pd.id.isin(rm_ids.id)]
             rm_vdl = rm_vdl.assign(date_removed=datetime.datetime.now())
@@ -195,15 +195,15 @@ class AWS_handler:
         # Items to update:
         common_ids = combined_vdl.query('_merge == "both"')
         if not common_ids.empty:
-            duplicate_ids = pd.merge(vehicle_data_list_pd.drop(columns=['date_scraped', 'last_updated', 'uuid', 'img']),
-                                    vehicle_data_list_remote_pd.drop(columns=['date_scraped', 'last_updated', 'uuid', 'img']),
+            duplicate_ids = pd.merge(vehicle_data_list_pd.drop(columns=['date_scraped', 'last_updated', 'date_removed', 'uuid', 'img']),
+                                    vehicle_data_list_remote_pd.drop(columns=['date_scraped', 'last_updated', 'date_removed', 'uuid', 'img']),
                                     how='inner')
             modified_ids = common_ids[~common_ids.id.isin(duplicate_ids.id)]
             if not modified_ids.empty:
                 modified_vdl = pd.merge(vehicle_data_list_pd[vehicle_data_list_pd.id.isin(modified_ids)].drop(columns=['date_scraped']),
                                     vehicle_data_list_remote_pd[vehicle_data_list_remote_pd.id.isin(modified_ids)][['id', 'date_scraped']],
                                     how='outer', on='id')
-                modified_vdl = modified_vdl.assign(date_removed=datetime.datetime.now())
+                modified_vdl = modified_vdl.assign(last_updated=datetime.datetime.now())
                 updated_vdl = pd.concat([updated_vdl[~updated_vdl.id.isin(modified_vdl.id)], modified_vdl])
 
         aws.upload_to_rds(updated_vdl, table)

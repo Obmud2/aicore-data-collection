@@ -1,10 +1,10 @@
-from scraper.autotrader_scraper import Autotrader_scraper
 import unittest
-from bs4 import BeautifulSoup
 import urllib.request
 import re
+from bs4 import BeautifulSoup
 
 from scraper.vehicle_data import Vehicle_data
+from scraper.autotrader_scraper import Autotrader_scraper
 
 class ScraperTestCase(unittest.TestCase):
     
@@ -12,16 +12,6 @@ class ScraperTestCase(unittest.TestCase):
         self.vehicle_data_list = []
         self.test_make = "Lotus"
         self.test_model = "Exige"
-    
-    # def test_search_vehicle_type(self):
-    #     """
-    #     Check that search is completed and new url is reached including search terms
-    #     """
-    #     self.test_scraper = Autotrader_scraper()
-    #     init_url = self.test_scraper.driver.current_url[:-1]
-    #     self.test_scraper.search_vehicle_type(self.test_make, self.test_model)
-    #     new_url = self.test_scraper.driver.current_url[:-1]
-    #     self.assertTrue(init_url != new_url and self.test_make in new_url and self.test_model in new_url)
 
     def test_get_vehicle_list(self):
         """
