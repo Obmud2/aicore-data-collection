@@ -20,7 +20,7 @@ class Autotrader_scraper:
             browser_options.headless = True
         self.url = url
         self.verbose = verbose
-        self.driver = webdriver.Firefox(options=browser_options, executable_path='driver/geckodriver')
+        self.driver = webdriver.Firefox(options=browser_options, executable_path='/usr/local/bin/geckodriver')
         self.driver.implicitly_wait(0.5)
         self.driver.maximize_window()
         self.driver.get(self.url)
