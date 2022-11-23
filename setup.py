@@ -10,6 +10,6 @@ setup(
     license='MIT',
     test_suite='tests',
     packages=find_packages(),
-    install_requires=['regex', 'tqdm', 'selenium', 'undetected_chromedriver', 
-                    'boto3', 'psycopg2', 'pandas', 'sqlalchemy', 'uuid', 'bs4']
+    install_requires=['regex', 'tqdm', 'selenium', 'boto3', 'psycopg2',
+                      'pandas', 'sqlalchemy', 'uuid', 'bs4']
 )
