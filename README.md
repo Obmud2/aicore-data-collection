@@ -70,8 +70,8 @@ Technologies used:
 
 Containerisation using Docker is introduced to add portability to the scraper. The dockerfile is used to install Firefox and geckodriver in the docker image. The docker image is uploaded to dockerhub for distribution.
 
-Download the docker image using:
-`docker pull obmud2/scraper`
+Download and run the docker image using:
+`docker run obmud2/scraper:v1`
 
 Technologies used:
 - Docker
