@@ -15,3 +15,4 @@ driver
 .DS_Store
 setup.pyc
 scraper/__init__.pyc
+.aws

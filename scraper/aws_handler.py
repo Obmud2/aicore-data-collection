@@ -8,7 +8,7 @@ import pandas as pd
 import sqlalchemy as db
 from tqdm import tqdm
 
-from scraper.aws_password import pw
+from scraper.aws_password import pw, ACCESS_KEY, SECRET_KEY
 from scraper.vehicle_data import Vehicle_data
 
 class AWS_handler:
@@ -23,63 +23,6 @@ class AWS_handler:
         DATABASE = 'autotrader_scraper'   
         self.engine = db.create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{ENDPOINT}:{PORT}/{DATABASE}")
         self.inspector = db.inspect(self.engine)
-
-    def __create_rds(self, table) -> None:
-        """
-        Creates SQL table for vehicle data info
-        Args:
-            table (string): Name of table (car make/model)
-        """
-        metadata = db.MetaData()
-        rds_table = db.Table(table, metadata, 
-                            db.Column('id', db.Text, primary_key = True),
-                            db.Column('uuid', db.Text),
-                            db.Column('date_scraped', db.DateTime),
-                            db.Column('last_updated', db.DateTime),
-                            db.Column('date_removed', db.DateTime),
-                            db.Column('href', db.Text),
-                            db.Column('title', db.Text),
-                            db.Column('subtitle', db.Text),
-                            db.Column('price', db.BigInteger),
-                            db.Column('location', db.Text),
-                            db.Column('mileage', db.BigInteger),
-                            db.Column('description', db.Text),
-                            db.Column('img', db.Text)
-                            ) 
-        metadata.create_all(self.engine)
-
-    def __add_to_rds(self, vehicle_data, table) -> None:
-        """
-        Adds Vehicle_data object to remote SQL table. Compares row with existing entries, and uploads or updates the row.
-        Args:
-            vehicle_data (Vehicle_data): Vehicle data object describing the SQL row to upload
-            table (str): Name to SQL table to upload
-        """
-        veh_id = vehicle_data.get_data()['id']
-        vehicle_data_pd = vehicle_data.get_data_pd()
-        remote_data = pd.read_sql_query(sql=f"SELECT * FROM {table} WHERE id = \'{veh_id}\'", con=self.engine, index_col='id')
-        if len(remote_data) > 1:
-            print(remote_data)
-            raise Exception(f"Multiple matches found in remote database: {table}")
-        elif len(remote_data) == 0: #if entry does not exist
-            vehicle_data_pd.to_sql(table, self.engine, if_exists='append')
-        else: #compare data entries and update on rds
-            cols_to_ignore = ['date_scraped', 'last_updated', 'date_removed']
-            if not remote_data.drop(cols_to_ignore, axis=1).equals(vehicle_data_pd.drop(cols_to_ignore, axis=1)):
-                vehicle_data_pd['date_scraped'].iloc[0] = remote_data['date_scraped'].iloc[0]
-                vehicle_data_pd['last_updated'].iloc[0] = datetime.datetime.now()
-            self.engine.execute(f"DELETE FROM {table} WHERE id={veh_id}")
-            vehicle_data_pd.to_sql(table, self.engine, if_exists='append')
-
-    def __update_date_removed(self, vehicle_id_list, table):
-        """
-        Updates date_removed for list of vehicle ids in table
-        """
-        vehicle_id_list_text = " OR ".join(["id=" + t for t in vehicle_id_list])
-        self.engine.execute(f"UPDATE {table} " +
-                            f"SET date_removed=NOW() " +
-                            f"WHERE ({vehicle_id_list_text}) " + 
-                            f"AND date_removed=NULL")
 
     def upload_to_rds(self, vehicle_data_list_pd, table) -> None:
         """
@@ -119,7 +62,8 @@ class AWS_handler:
             bucket (str): S3 bucket to store data
             verbose (bool): Option to print output to console (default = False)
         """
-        s3_client = boto3.client('s3')
+        session = boto3.Session(aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY)
+        s3_client = session.client('s3')
         file_paths = []
         s3_list = AWS_handler.list_s3(bucket, prefix=folder_name)
         for root, dirs, files in os.walk(path):
@@ -140,7 +84,8 @@ class AWS_handler:
             bucket (str): S3 bucket to list data
         Returns: 
         """
-        s3_client = boto3.client('s3')
+        session = boto3.Session(aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY)
+        s3_client = session.client('s3')
         response = s3_client.list_objects_v2(Bucket=bucket, Prefix=prefix)
         list_files = []
         if 'Contents' in response.keys():
@@ -156,7 +101,8 @@ class AWS_handler:
             prefix (str): Name of prefix to delete all files
             bucket (str): Name of bucket
         """
-        s3 = boto3.resource('s3')
+        session = boto3.Session(aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY)
+        s3 = session.resource('s3')
         bkt = s3.Bucket(bucket)
         bkt.objects.filter(Prefix=prefix).delete()
 
@@ -209,4 +155,5 @@ class AWS_handler:
         aws.upload_to_rds(updated_vdl, table)
 
 if __name__ == "__main__":
-    pass
+    i = AWS_handler()
+    print(i.list_s3())

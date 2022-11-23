@@ -6,11 +6,13 @@ Project to collect price, mileage, location and age data from Autotrader to esti
 ## Milestone 1: Finding individual listing entries and URLs
 Initial build of the scraper, used to accept cookies, search for a car make and model, and extract summary data of each car including the web address for each item.
 
-Selenium is used as the main technology using a safari web driver to enable flexible website navigation and data extraction.
+Selenium is used as the main technology using firefox web driver (geckodriver) to enable headless website navigation and data scraping.
 
 Technologies used:
 - Conda (virtual environments)
 - Selenium (browser driver for completing complex web scraping beyond html)
+- Chrome driver
+- Geckodriver (firefox)
 
 ## Milestone 2: Adding further data from individual pages and storing data locally
 Scrapes the list of URLs and individual page data to create dictionaries for each vehicle entry. Data and images are saved locally, as json and jpg formats respectively. Each vehicle entry is recorded with a unique id from autotrader, and a unique UUID.
@@ -41,6 +43,8 @@ Several issues were identified and resolved during testing, including:
 - Readability of the code was improved with docstrings and variable names
 - Testing file dependencies were identified and removed.
 - Handling of deleted webpages was added
+- Detection of headless mode in chrome webdriver
+- ARM compatibility of chrome webdriver
 
 Technologies used:
 - Beautiful soup (faster implementation than selenium to support faster testing)
@@ -50,13 +54,25 @@ Technologies used:
 
 TODO:
 - Support dynamic class ids from autotrader html
-- Add handling of deleted img files
 
 ## Milestone 4: Cloud Storage
 
 Connections to AWS cloud storage are added to scalably store the data from the web scraper. Connections to the AWS webserver are handled using the AWS_handler class. Data is uploaded to RDS using batch processing.
 
+Pandas is used to manage the database locally before uploading to RDS. This ensures that duplicate data is not re-uploaded.
+
 Technologies used:
 - AWS RDS (using sqlalchemy and psycopg2)
 - AWS S3 (using boto3)
 - Numpy, Pandas, SQL, SQLAlchemy, psycopg2, tqdm
+
+## Milestone 5: Containerisation
+
+Containerisation using Docker is introduced to add portability to the scraper. The dockerfile is used to install Firefox and geckodriver in the docker image. The docker image is uploaded to dockerhub for distribution.
+
+Download the docker image using:
+`docker pull obmud2/scraper`
+
+Technologies used:
+- Docker
+- Dockerhub
