@@ -6,4 +6,3 @@ selenium==4.6.0
 setuptools==65.5.1
 SQLAlchemy==1.4.41
 tqdm==4.64.1
-undetected_chromedriver==3.1.6
