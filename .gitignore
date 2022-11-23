@@ -8,3 +8,10 @@ test/__pycache__
 scraper/aws_password.py
 build
 scraper.egg-info
+geckodriver.log
+dist
+.ipynb_checkpoints
+driver
+.DS_Store
+setup.pyc
+scraper/__init__.pyc

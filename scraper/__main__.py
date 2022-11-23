@@ -8,7 +8,7 @@ VEHICLE_MAKE = "Lotus"
 VEHICLE_MODEL = 'Elise'
 dir_name = f"{VEHICLE_MAKE.replace(' ','')}_{VEHICLE_MODEL.replace(' ','')}".lower()
 
-scraper = Autotrader_scraper(headless=False)
+scraper = Autotrader_scraper(headless=True)
 aws = AWS_handler()
 vehicle_data_list = scraper.get_vehicle_list(VEHICLE_MAKE, VEHICLE_MODEL, max_pages=0)
 vehicle_data_list = scraper.get_vehicle_page_data(vehicle_data_list)

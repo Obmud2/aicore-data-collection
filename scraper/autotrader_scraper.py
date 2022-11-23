@@ -1,11 +1,10 @@
 import re
 import time
-import undetected_chromedriver as uc
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.by import By
 from tqdm import tqdm
 
@@ -16,13 +15,12 @@ class Autotrader_scraper:
     Container class for the autotrader scraper tool.
     """
     def __init__(self, url="https://www.autotrader.co.uk", verbose=False, headless=True):
-        chrome_options = Options()
+        browser_options = Options()
         if headless:
-            chrome_options.add_argument("--headless")  
-            chrome_options.add_argument("window-size=1920,1080")
+            browser_options.headless = True
         self.url = url
         self.verbose = verbose
-        self.driver = uc.Chrome(options=chrome_options, use_subprocess=True)
+        self.driver = webdriver.Firefox(options=browser_options, executable_path='driver/geckodriver')
         self.driver.implicitly_wait(0.5)
         self.driver.maximize_window()
         self.driver.get(self.url)
@@ -148,7 +146,8 @@ class Autotrader_scraper:
             time.sleep(2)
         def __select_make(make):
             delay = 10 # Max delay to wait for model list to appear
-            while (next((attr['name'] for attr in self.driver.find_element(By.XPATH, "//select[@id='model']").get_property('attributes') if attr['name']=='disabled'), False)):
+            test = self.driver.find_elements(By.XPATH, "//select[@id='model']")
+            while (self.driver.find_elements(By.XPATH, "//select[@id='model' and @disabled]")):
                 make_selection = Select(self.driver.find_element(by=By.XPATH, value="//select[@id='make']"))
                 make_selection.select_by_value(make)
                 time.sleep(2)
