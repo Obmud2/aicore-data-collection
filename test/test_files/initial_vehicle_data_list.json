@@ -1,12 +1,63 @@
 [
     {
-        "id": "202211041381778",
-        "uuid": "b911a037-07d5-41b9-ba63-bfb6d66a342b",
-        "date_scraped": "2022-11-07 18:58:28.808610",
+        "id": "202211111601540",
+        "uuid": "bbc9f8aa-22a1-41cc-85b9-c7e2313e421b",
+        "date_scraped": "2022-11-23 10:44:29.370101",
         "last_updated": null,
         "date_removed": null,
         "data": {
-            "href": "https://www.autotrader.co.uk/car-details/202211041381778?postcode=fk78bh&advertising-location=at_cars&sort=relevance&radius=1501&model=Exige&include-delivery-option=on&make=Lotus&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&page=1&percentVehiclePriceDeposit=true",
+            "href": "https://www.autotrader.co.uk/car-details/202211111601540?include-delivery-option=on&advertising-location=at_cars&make=Lotus&radius=1501&model=Exige&postcode=fk78bh&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&sort=relevance&page=1",
+            "title": "Lotus Exige",
+            "subtitle": "1.8 S Sports Euro 4 2dr",
+            "price": 34999,
+            "location": "Heathfield",
+            "mileage": null,
+            "description": null,
+            "img": []
+        }
+    },
+    {
+        "id": "202211101554363",
+        "uuid": "05e23274-4765-4576-aec0-8e9973e06bcf",
+        "date_scraped": "2022-11-23 10:44:29.391159",
+        "last_updated": null,
+        "date_removed": null,
+        "data": {
+            "href": "https://www.autotrader.co.uk/car-details/202211101554363?include-delivery-option=on&advertising-location=at_cars&make=Lotus&radius=1501&model=Exige&postcode=fk78bh&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&sort=relevance&page=1",
+            "title": "Lotus Exige",
+            "subtitle": "3.5 V6 Sport 350 Euro 6 2dr",
+            "price": 49990,
+            "location": "Hamilton",
+            "mileage": null,
+            "description": null,
+            "img": []
+        }
+    },
+    {
+        "id": "202210301208650",
+        "uuid": "0cf92a7c-e615-4265-bf59-9593cc924b75",
+        "date_scraped": "2022-11-23 10:44:29.411511",
+        "last_updated": null,
+        "date_removed": null,
+        "data": {
+            "href": "https://www.autotrader.co.uk/car-details/202210301208650?include-delivery-option=on&advertising-location=at_cars&make=Lotus&radius=1501&model=Exige&postcode=fk78bh&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&sort=relevance&page=1",
+            "title": "Lotus Exige",
+            "subtitle": "3.5 V6 Sport 410 Euro 6 2dr",
+            "price": 70990,
+            "location": "Hamilton",
+            "mileage": null,
+            "description": null,
+            "img": []
+        }
+    },
+    {
+        "id": "202211041381778",
+        "uuid": "64bdec38-f8f6-4ef5-a39b-d04a6220ee8e",
+        "date_scraped": "2022-11-23 10:44:29.431485",
+        "last_updated": null,
+        "date_removed": null,
+        "data": {
+            "href": "https://www.autotrader.co.uk/car-details/202211041381778?include-delivery-option=on&advertising-location=at_cars&make=Lotus&radius=1501&model=Exige&postcode=fk78bh&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&sort=relevance&page=1&percentVehiclePriceDeposit=true",
             "title": "Lotus Exige",
             "subtitle": "3.5 V6 S Euro 5 2dr",
             "price": 44950,
@@ -18,12 +69,12 @@
     },
     {
         "id": "202210190892378",
-        "uuid": "2f866885-8dfc-41fb-aaa4-f66749e3aa91",
-        "date_scraped": "2022-11-07 18:58:28.869256",
+        "uuid": "92dac9bc-6e7f-44c3-99e1-77bedf22805e",
+        "date_scraped": "2022-11-23 10:44:29.451138",
         "last_updated": null,
         "date_removed": null,
         "data": {
-            "href": "https://www.autotrader.co.uk/car-details/202210190892378?postcode=fk78bh&advertising-location=at_cars&sort=relevance&radius=1501&model=Exige&include-delivery-option=on&make=Lotus&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&page=1&percentVehiclePriceDeposit=true",
+            "href": "https://www.autotrader.co.uk/car-details/202210190892378?include-delivery-option=on&advertising-location=at_cars&make=Lotus&radius=1501&model=Exige&postcode=fk78bh&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&sort=relevance&page=1&percentVehiclePriceDeposit=true",
             "title": "Lotus Exige Coupe",
             "subtitle": "3.5 S 2DR Manual",
             "price": 46980,
@@ -34,33 +85,16 @@
         }
     },
     {
-        "id": "202210251048603",
-        "uuid": "d13d1ef4-f111-480a-8460-f3dae92de440",
-        "date_scraped": "2022-11-07 18:58:28.928374",
-        "last_updated": null,
-        "date_removed": null,
-        "data": {
-            "href": "https://www.autotrader.co.uk/car-details/202210251048603?postcode=fk78bh&advertising-location=at_cars&sort=relevance&radius=1501&model=Exige&include-delivery-option=on&make=Lotus&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&page=1&percentVehiclePriceDeposit=true",
-            "title": "Lotus Exige",
-            "subtitle": "3.5 V6 S Euro 5 2dr",
-            "price": 51850,
-            "location": "Solihull",
-            "mileage": null,
-            "description": null,
-            "img": []
-        }
-    },
-    {
         "id": "202209089560165",
-        "uuid": "ec9d0077-724e-45a5-9995-1c0d2210a275",
-        "date_scraped": "2022-11-07 18:58:28.987372",
+        "uuid": "c885fa41-472d-418d-b083-e09cee3f5bf0",
+        "date_scraped": "2022-11-23 10:44:29.470768",
         "last_updated": null,
         "date_removed": null,
         "data": {
-            "href": "https://www.autotrader.co.uk/car-details/202209089560165?postcode=fk78bh&advertising-location=at_cars&sort=relevance&radius=1501&model=Exige&include-delivery-option=on&make=Lotus&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&page=1&percentVehiclePriceDeposit=true",
+            "href": "https://www.autotrader.co.uk/car-details/202209089560165?include-delivery-option=on&advertising-location=at_cars&make=Lotus&radius=1501&model=Exige&postcode=fk78bh&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&sort=relevance&page=1&percentVehiclePriceDeposit=true",
             "title": "Lotus Exige",
             "subtitle": "1.8 S Sports Touring Performance Euro 4 2dr",
-            "price": 36911,
+            "price": 34911,
             "location": "Newark",
             "mileage": null,
             "description": null,
@@ -68,47 +102,13 @@
         }
     },
     {
-        "id": "202210170823276",
-        "uuid": "1edfbd3a-2532-4e4e-a936-978e178b0e10",
-        "date_scraped": "2022-11-07 18:58:29.047481",
-        "last_updated": null,
-        "date_removed": null,
-        "data": {
-            "href": "https://www.autotrader.co.uk/car-details/202210170823276?postcode=fk78bh&advertising-location=at_cars&sort=relevance&radius=1501&model=Exige&include-delivery-option=on&make=Lotus&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&page=1",
-            "title": "Lotus Exige",
-            "subtitle": "1.8 S Sports Euro 4 2dr",
-            "price": 28500,
-            "location": "Ware",
-            "mileage": null,
-            "description": null,
-            "img": []
-        }
-    },
-    {
-        "id": "202210140719943",
-        "uuid": "aad74530-7d75-4d11-8d92-b67b8d0833d3",
-        "date_scraped": "2022-11-07 18:58:29.107285",
-        "last_updated": null,
-        "date_removed": null,
-        "data": {
-            "href": "https://www.autotrader.co.uk/car-details/202210140719943?postcode=fk78bh&advertising-location=at_cars&sort=relevance&radius=1501&model=Exige&include-delivery-option=on&make=Lotus&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&page=1&percentVehiclePriceDeposit=true",
-            "title": "Lotus Exige",
-            "subtitle": "3.5 V6 350 Sport 2dr",
-            "price": 58750,
-            "location": "Bradford",
-            "mileage": null,
-            "description": null,
-            "img": []
-        }
-    },
-    {
         "id": "202206176875005",
-        "uuid": "03479853-1307-4433-9b6e-46cc6f18a311",
-        "date_scraped": "2022-11-07 18:58:29.168800",
+        "uuid": "7d807731-1b6d-4e49-8b81-7964e5401f5d",
+        "date_scraped": "2022-11-23 10:44:29.490238",
         "last_updated": null,
         "date_removed": null,
         "data": {
-            "href": "https://www.autotrader.co.uk/car-details/202206176875005?postcode=fk78bh&advertising-location=at_cars&sort=relevance&radius=1501&model=Exige&include-delivery-option=on&make=Lotus&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&page=1&percentVehiclePriceDeposit=true",
+            "href": "https://www.autotrader.co.uk/car-details/202206176875005?include-delivery-option=on&advertising-location=at_cars&make=Lotus&radius=1501&model=Exige&postcode=fk78bh&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&sort=relevance&page=1&percentVehiclePriceDeposit=true",
             "title": "Lotus Exige",
             "subtitle": "410 Sport 3.5 2dr",
             "price": 85900,
@@ -119,16 +119,33 @@
         }
     },
     {
-        "id": "202209230037267",
-        "uuid": "8e11d15e-096a-4fcb-9e6d-94e9e0b2cd95",
-        "date_scraped": "2022-11-07 18:58:29.228910",
+        "id": "202210170823276",
+        "uuid": "46b37a1e-8827-417a-bdb6-94ca9a43400d",
+        "date_scraped": "2022-11-23 10:44:29.509285",
         "last_updated": null,
         "date_removed": null,
         "data": {
-            "href": "https://www.autotrader.co.uk/car-details/202209230037267?postcode=fk78bh&advertising-location=at_cars&sort=relevance&radius=1501&model=Exige&include-delivery-option=on&make=Lotus&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&page=1&percentVehiclePriceDeposit=true",
+            "href": "https://www.autotrader.co.uk/car-details/202210170823276?include-delivery-option=on&advertising-location=at_cars&make=Lotus&radius=1501&model=Exige&postcode=fk78bh&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&sort=relevance&page=1",
+            "title": "Lotus Exige",
+            "subtitle": "1.8 S Sports Euro 4 2dr",
+            "price": 28500,
+            "location": "Ware",
+            "mileage": null,
+            "description": null,
+            "img": []
+        }
+    },
+    {
+        "id": "202209230037267",
+        "uuid": "2fdd109f-9008-43ff-8475-07a017900015",
+        "date_scraped": "2022-11-23 10:44:29.529668",
+        "last_updated": null,
+        "date_removed": null,
+        "data": {
+            "href": "https://www.autotrader.co.uk/car-details/202209230037267?include-delivery-option=on&advertising-location=at_cars&make=Lotus&radius=1501&model=Exige&postcode=fk78bh&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&sort=relevance&page=1&percentVehiclePriceDeposit=true",
             "title": "Lotus Exige",
             "subtitle": "3.5 S RACE AND PREMIUM SPORT 2d 345 BHP",
-            "price": 47950,
+            "price": 46950,
             "location": "Atherstone",
             "mileage": null,
             "description": null,
@@ -136,34 +153,34 @@
         }
     },
     {
-        "id": "202210140734162",
-        "uuid": "a3b552d2-1ce5-4153-8a9e-05bca0c2a043",
-        "date_scraped": "2022-11-07 18:58:29.289354",
+        "id": "202208088588766",
+        "uuid": "52a237cd-da76-452f-89ba-3d0ae5aaaccf",
+        "date_scraped": "2022-11-23 10:44:29.549323",
         "last_updated": null,
         "date_removed": null,
         "data": {
-            "href": "https://www.autotrader.co.uk/car-details/202210140734162?postcode=fk78bh&advertising-location=at_cars&sort=relevance&radius=1501&model=Exige&include-delivery-option=on&make=Lotus&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&page=1",
+            "href": "https://www.autotrader.co.uk/car-details/202208088588766?include-delivery-option=on&advertising-location=at_cars&make=Lotus&radius=1501&model=Exige&postcode=fk78bh&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&sort=relevance&page=1",
             "title": "Lotus Exige",
-            "subtitle": "3.5 V6 S Roadster Euro 5 2dr",
-            "price": 42898,
-            "location": "Llanishen",
+            "subtitle": "3.5 V6 S Euro 5 2dr",
+            "price": 42000,
+            "location": "Bishop'S Stortford",
             "mileage": null,
             "description": null,
             "img": []
         }
     },
     {
-        "id": "202206287243795",
-        "uuid": "0086f120-2f9a-45d7-a444-176900a195a1",
-        "date_scraped": "2022-11-07 18:58:29.351642",
+        "id": "202208098626852",
+        "uuid": "1fc3b4a6-a683-4194-9e9b-e1b0e7cdf8fc",
+        "date_scraped": "2022-11-23 10:44:29.568956",
         "last_updated": null,
         "date_removed": null,
         "data": {
-            "href": "https://www.autotrader.co.uk/car-details/202206287243795?postcode=fk78bh&advertising-location=at_cars&sort=relevance&radius=1501&model=Exige&include-delivery-option=on&make=Lotus&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&page=1&percentVehiclePriceDeposit=true",
+            "href": "https://www.autotrader.co.uk/car-details/202208098626852?include-delivery-option=on&advertising-location=at_cars&make=Lotus&radius=1501&model=Exige&postcode=fk78bh&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&sort=relevance&page=1&journey=PROMOTED_LISTING_JOURNEY&percentVehiclePriceDeposit=true",
             "title": "Lotus Exige",
-            "subtitle": "3.5 V6 S Euro 5 2dr",
-            "price": 46980,
-            "location": "Sutton-In-Ashfield",
+            "subtitle": "3.5 V6 410 SPORT 2DR",
+            "price": 78990,
+            "location": "Exeter",
             "mileage": null,
             "description": null,
             "img": []
