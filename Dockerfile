@@ -9,7 +9,7 @@ RUN apt-get install -y firefox-esr
 RUN latest_release=$(curl -sS https://api.github.com/repos/mozilla/geckodriver/releases/latest \
     | grep tag_name | sed -E 's/.*"([^"]+)".*/\1/') && \
     # Download the latest release of geckodriver
-    wget https://github.com/mozilla/geckodriver/releases/download/v0.32.0/geckodriver-v0.32.0-linux-aarch64.tar.gz \
+    wget https://github.com/mozilla/geckodriver/releases/download/v0.32.0/geckodriver-v0.32.0-linux64.tar.gz \
     # extract the geckodriver
     && tar -xvzf geckodriver* \
     # add executable permissions to the driver
