@@ -71,11 +71,15 @@ Technologies used:
 Containerisation using Docker is introduced to add portability to the scraper. The dockerfile is used to install Firefox and geckodriver in the docker image. The docker image is uploaded to dockerhub for distribution.
 
 Download and run the docker image using:
-`docker run obmud2/scraper:v1_amd64` (for linux)
+`docker run -d --rm obmud2/scraper:v1_amd64 "Vehicle_make" "Vehicle_model"` (for linux)
 or
-`docker run obmud2/scraper:v1` (for arm46)
+`docker run -d --rm obmud2/scraper:v1 "Vehicle_make" "Vehicle_model"` (for arm46)
 
-The docker image is installed on an AWS EC2 instance using a linux amd64 EC2 instance and is scheduled to run daily at 0400 using crontab scheduling.
+To build and push the docker image:
+`docker build --platform linux/amd64 --tag obmud2/scraper:v1_amd64 .`
+`docker push obmud2/scraper:v1_amd64`
+
+The docker image is installed on an AWS EC2 instance using a linux amd64 EC2 instance and is scheduled to run daily at 0400 using crontab scheduling. STDOUT of the docker container is recorded in `log.txt` on the EC2 instance.
 
 Technologies used:
 - Docker
