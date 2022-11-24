@@ -19,4 +19,4 @@ RUN latest_release=$(curl -sS https://api.github.com/repos/mozilla/geckodriver/r
 
 COPY . .
 RUN pip install -r requirements.txt && pip install .
-CMD ["python", "scraper"]
+ENTRYPOINT ["python", "scraper"]
