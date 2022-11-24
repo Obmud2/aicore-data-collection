@@ -75,6 +75,7 @@ class AWS_handler:
             key = os.path.join(folder_name, file)
             if key not in s3_list:
                 response = s3_client.upload_file(Filename=file, Bucket=bucket, Key=key)
+        if verbose: print(f"{datetime.datetime.now()}: {len(file_paths)} images uploaded")
         s3_client.close()
 
     def list_s3(self, bucket='autotraderscraper', prefix='')->list:
@@ -106,7 +107,7 @@ class AWS_handler:
         bkt = s3.Bucket(bucket)
         bkt.objects.filter(Prefix=prefix).delete()
 
-    def upload_list_to_remote(self, vehicle_data_list, table) -> None:
+    def upload_list_to_remote(self, vehicle_data_list, table, verbose=False) -> None:
         """
         Args:
             vehicle_data_list (list{Vehicle_data}): List from memory
@@ -130,6 +131,7 @@ class AWS_handler:
             rm_vdl = vehicle_data_list_remote_pd[vehicle_data_list_remote_pd.id.isin(rm_ids.id)]
             rm_vdl = rm_vdl.assign(date_removed=datetime.datetime.now())
             updated_vdl = pd.concat([updated_vdl[~updated_vdl.id.isin(rm_vdl.id)], rm_vdl])
+        if verbose: print(f"Removed items:\n{rm_ids[['id']].to_string(index=False)}\n")
 
         # New items:
         new_ids = combined_vdl.query('_merge == "left_only"')
@@ -137,6 +139,7 @@ class AWS_handler:
             new_vdl = vehicle_data_list_pd[vehicle_data_list_pd.id.isin(new_ids.id)]
             new_vdl = new_vdl.assign(last_updated=datetime.datetime.now())
             updated_vdl = pd.concat([updated_vdl, new_vdl])
+        if verbose: print(f"New items:\n{new_ids[['id']].to_string(index=False)}\n")
 
         # Items to update:
         common_ids = combined_vdl.query('_merge == "both"')
@@ -151,6 +154,7 @@ class AWS_handler:
                                     how='outer', on='id')
                 modified_vdl = modified_vdl.assign(last_updated=datetime.datetime.now())
                 updated_vdl = pd.concat([updated_vdl[~updated_vdl.id.isin(modified_vdl.id)], modified_vdl])
+            if verbose: print(f"Updated items:\n{modified_vdl[['id']].to_string(index=False)}\n")
 
         aws.upload_to_rds(updated_vdl, table)
 

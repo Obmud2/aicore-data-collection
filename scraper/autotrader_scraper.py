@@ -40,8 +40,7 @@ class Autotrader_scraper:
             if self.verbose: print("Cookies accepted")
             time.sleep(2)
         except Exception as e:
-            print(e)
-            print(f"Error accepting cookies")
+            pass
     
     def __check_for_cookies_frame(self) -> bool:
         if self.driver.find_elements(by=By.XPATH, value='//iframe[@id="sp_message_iframe_687971"]'):
@@ -113,15 +112,15 @@ class Autotrader_scraper:
         vehicle_mileage = int(re.sub("[^0-9]", "", vehicle_mileage))
 
         try:
-            desc_button = self.driver.find_element(by=By.XPATH, value="//button[@class='sc-dksuTV sc-cOohKt sc-lMZDC zPuL ieYCDx nRsKQ atc-type-picanto atc-type-picanto--medium']")
+            desc_button = self.driver.find_element(by=By.XPATH, value="//button[@class='sc-dksuTV sc-lMZDC sc-eSRwjH zPuL zkPUl bvSIix atc-type-picanto atc-type-picanto--medium']")
             desc_button.click()
             time.sleep(1)
-            vehicle_desc = self.driver.find_element(by=By.XPATH, value="//p[@class='sc-joaiRD gQkOux atc-type-picanto']").text.strip()
+            vehicle_desc = self.driver.find_element(by=By.XPATH, value="//p[@class='sc-faQVUR jdttGR atc-type-picanto']").text.strip()
             desc_exit_button = self.driver.find_element(by=By.XPATH, value="//button[@aria-label='Close']")
             desc_exit_button.click()
         except:
             # Use summary description if no 'Read more' button is present
-            vehicle_desc = self.driver.find_element(by=By.XPATH, value="//p[@class='sc-iLCGUA gVqxW atds-type-picanto']").text.strip()
+            vehicle_desc = self.driver.find_element(by=By.XPATH, value="//p[@class='sc-cdlubJ fbnjJt atds-type-picanto']").text.strip()
 
         vehicle_data.add_data(
             mileage = vehicle_mileage,
