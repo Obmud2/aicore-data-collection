@@ -16,3 +16,4 @@ driver
 setup.pyc
 scraper/__init__.pyc
 .aws
+prometheus

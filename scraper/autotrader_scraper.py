@@ -94,6 +94,7 @@ class Autotrader_scraper:
             Vehicle_data: Vehicle_data type including additional vehicle data scraped from vehicle page.
         """
         url = vehicle_data.get_url()
+
         self.driver.get(url)
         time.sleep(0.5)
         if self.__check_for_cookies_frame():
@@ -104,9 +105,12 @@ class Autotrader_scraper:
             vehicle_data.set_date_removed()
             return vehicle_data
 
-        img_track = self.driver.find_element(by=By.XPATH, value="//div[@class='slick-track']")
         vehicle_img_list = []
-        vehicle_img_list.append(img_track.find_element(by=By.XPATH, value=".//img").get_attribute("src"))
+        try:
+            img_track = self.driver.find_element(by=By.XPATH, value="//div[@class='slick-track']")
+            vehicle_img_list.append(img_track.find_element(by=By.XPATH, value=".//img").get_attribute("src"))
+        except:
+            pass
 
         vehicle_mileage = self.driver.find_element(by=By.XPATH, value="//span[@data-gui='mileage']").text.strip()
         vehicle_mileage = int(re.sub("[^0-9]", "", vehicle_mileage))
