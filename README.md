@@ -86,3 +86,11 @@ Technologies used:
 - Dockerhub
 - EC2
 - crontab
+- Prometheus
+
+## Milestone 6: CI/CD
+A simple CI/CD pipeline is set up to continuously integrate and deploy the scraper to a Docker image and publish on Docker Hub when the scraper is pushed to Github.
+
+Technologies used:
+- Github actions
+- YAML
