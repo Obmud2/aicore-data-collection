@@ -159,5 +159,4 @@ class AWS_handler:
         aws.upload_to_rds(updated_vdl, table)
 
 if __name__ == "__main__":
-    i = AWS_handler()
-    print(i.list_s3())
+    pass
